@@ -1,16 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { useTheme } from "@/src/context/ThemeProvider";
-import { csv } from "d3-fetch";
-import { scaleLinear } from "d3-scale";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Sphere,
-  Graticule
-} from "react-simple-maps";
-import { mapData } from "@/src/data/map";
+import { useTheme } from "@/context/ThemeProvider";
 import AOS from "aos";
 import 'aos/dist/aos.css';
 

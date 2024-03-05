@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { useTheme } from "@/src/context/ThemeProvider";
+import { useTheme } from "@/context/ThemeProvider";
 
 const CollectionsPublications = () => {
   const { darkTheme } = useTheme();
