@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 60,
   },
   debug: true,
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
