@@ -1,15 +1,17 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Update import
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
+import { PiEye, PiEyeClosed } from "react-icons/pi";
 import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const router = useRouter();
   const callbackUrl = "/dashboard";
   const { data: session } = useSession();
+  const [ showPwlogin, setShowPwLogin ] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [formFilled, setFormFilled] = useState(false);
 
@@ -82,20 +84,25 @@ const LoginPage = () => {
     }
   }, [formData]);
 
+  const togglePasswordVisibility = () => {
+    setShowPwLogin(!showPwlogin);
+  };
+
   return (
     <main>
       <div className="border rounded-xl border-stone 300 shadow-md justify-center items-center flex min-h-screen flex-col items-center">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
-          {/*content*/}
+        <Link
+          href="/"
+          className="bg-logo-blue w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
+        ></Link>
+        <div className="relative my-6 mx-auto w-1/3">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            {/*header*/}
-            <div className="flex flex-col items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+            <div className="flex flex-col items-start justify-between p-5">
               <h3 className="w-full text-center text-3xl font-semibold">
                 Login
               </h3>
             </div>
-            {/*body*/}
-            <div className="relative p-6 flex-auto">
+            <div className="p-6 flex-auto">
               <form
                 id="login-form"
                 className="space-y-6"
@@ -108,14 +115,23 @@ const LoginPage = () => {
                   value={formData.username}
                   onChange={handleChange}
                 />
-                <input
-                  id="password"
-                  className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
-                  placeholder="Password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
+                    placeholder="Password"
+                    type={showPwlogin ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPwlogin ? <PiEye /> : <PiEyeClosed />}
+                  </button>
+                </div>
               </form>
               <div className="flex-col items-center justify-center space-y-4 mt-6">
                 <a href="#" className="w-full text-hi-dark text-sm mb-2">

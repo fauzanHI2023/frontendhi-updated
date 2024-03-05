@@ -1,4 +1,4 @@
-interface FormDataPersonal {
+  interface FormDataPersonal {
     user_name: string;
     full_name: string;
     email: string;
@@ -10,7 +10,6 @@ interface FormDataPersonal {
     full_name: string;
     email: string;
     passwd: string;
-    // Tambahkan field lain jika diperlukan
   }
   
   export async function registerPersonal(formData: FormDataPersonal): Promise<any> {
@@ -23,9 +22,18 @@ interface FormDataPersonal {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Username and email already exists');
+      }
+  
+      if (!data.success) {
+        throw new Error(data.message || 'Username and email already exists');
+      }
+  
       return data;
     } catch (error) {
-      throw new Error('Failed to register personal');
+      throw new Error('Username and email already exists');
     }
   }
   
@@ -39,9 +47,43 @@ interface FormDataPersonal {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to register company');
+      }
+  
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to register company');
+      }
+  
       return data;
     } catch (error) {
-      throw new Error('Failed to register company');
+      throw new Error('Username and email already exists');
     }
   }
+
+  export async function checkUsernameEmail(username: string, email: string): Promise<{ usernameExists: boolean, emailExists: boolean }> {
+    try {
+      const response = await fetch(`https://adminx.human-initiative.org/register-personal/check-username-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_name: username, email }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to check username and email');
+      }
+  
+      const data = await response.json();
+      return {
+        usernameExists: data.username_exists,
+        emailExists: data.email_exists,
+      };
+    } catch (error:any) {
+      throw new Error(error.message || 'Failed to check username and email');
+    }
+  }
+  
   
