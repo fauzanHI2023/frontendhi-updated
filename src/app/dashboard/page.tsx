@@ -92,11 +92,11 @@ const page = async (props: Props) => {
                     <span>{data?.blood_type}</span>
                   </div>
                   <div className="flex flex-row">
-                    <span>Jenis Kelamin</span>
+                    <span className="mr-2 w-40 font-base text-zinc-800">Jenis Kelamin</span>
                     <span>{data?.sex}</span>
                   </div>
                   <div className="flex flex-row">
-                    <span>Nomor Identitas</span>
+                    <span className="mr-2 w-40 font-base text-zinc-800">Nomor Identitas</span>
                     <span>{data?.identity_no}</span>
                   </div>
                 </div>
