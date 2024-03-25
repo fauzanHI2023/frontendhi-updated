@@ -26,8 +26,8 @@ const SendEmail: React.FC = () => {
       const data = await response.json();
       if (data.success) {
         setVerificationCode(data.verificationCode);
-        setShowSendEmailForm(false);
-        setShowVerificationCodeForm(true);
+        setShowSendEmailForm(false); // Sembunyikan form kirim email jika berhasil
+        setShowVerificationCodeForm(true); // Tampilkan form verifikasi kode jika berhasil
         setMessage(data.message);
       } else {
         setMessage(`${data.message}`);
@@ -38,19 +38,14 @@ const SendEmail: React.FC = () => {
   };
 
   const handleVerificationCodeSuccess = () => {
-    setShowVerificationCodeForm(false);
-    setShowResetPasswordForm(true);
-  };
-
-  const handleRequestVerificationCodeAgain = () => {
-    // Panggil kembali fungsi untuk meminta kode verifikasi dengan email yang tersimpan
-    requestVerificationCode();
+    setShowVerificationCodeForm(false); // Sembunyikan form verifikasi kode setelah berhasil
+    setShowResetPasswordForm(true); // Tampilkan form reset password setelah verifikasi berhasil
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="flex flex-col w-full items-center">
-          {showSendEmailForm && (
+      {showSendEmailForm && (
             <>
               <div className="flex flex-col border rounded-xl border-stone 300 shadow-md p-6 mt-8 w-1/3">
                 <h3 className="text-2xl font-bold text-zinc-700">Reset Password</h3>

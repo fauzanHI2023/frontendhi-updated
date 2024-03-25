@@ -1,18 +1,18 @@
-// VerificationCodeForm.tsx
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 interface Props {
   email: string;
   onSuccess: () => void;
-  onRequestVerificationCode: (email: string) => void; // Menambahkan prop onSuccess untuk memberi tahu bahwa verifikasi berhasil
+  onRequestVerificationCode: (email: string) => void; // Tambahkan prop untuk permintaan pengiriman ulang kode
 }
 
 const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVerificationCode }) => {
   const router = useRouter();
   const [verificationCode, setVerificationCode] = useState('');
   const [message, setMessage] = useState('');
-  const [resendTimer, setResendTimer] = useState(60);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [resendTimer, setResendTimer] = useState(60); // 60 detik = 1 menit
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -36,7 +36,7 @@ const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVeri
       const data = await response.json();
       if (data.success) {
         setMessage(data.message);
-        onSuccess(); // Panggil prop onSuccess saat verifikasi berhasil
+        onSuccess();
       } else {
         setMessage(`${data.message}`);
       }
@@ -63,19 +63,22 @@ const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVeri
 
   return (
     <div className="flex flex-col border rounded-xl border-stone 100 shadow-md p-6 mt-8 w-2/5">
-      <h2 className="text-2xl font-bold text-center text-zinc-600">Verification Code Form</h2>
+      <h3 className="text-2xl font-bold text-center text-zinc-600">Enter the Verification Code</h3>
+      {showTooltip && (
+          <div className={`fixed top-96 flex transform -translate-y-full bg-sky-600 text-white py-2 px-4 rounded-md transition-all duration-300 ease-in-out`}>
+            {message}
+          </div>
+        )}
       <p className="text-base text-zinc-400 text-center py-3">A verification code has been sent via e-mail to {email}</p>
-      <div className="flex flex-col items-center mb-6">
+      <div className="flex flex-col items-center">
         <input
           type="text"
           value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
+          onChange={handleChange}
           maxLength={6}
           className="text-4xl text-zinc-600 text-center font-bold w-80 tracking-[1rem] h-11 px-4 roundered border-b border-sky-600 focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
         />
       </div>
-      <button onClick={verifyCodeAndShowResetPasswordForm} className="h-11 px-4 w-full rounded-xl bg-sky-600 text-white">Verify and Proceed</button>
-      <p>{message}</p>
       <div className="flex flex-col items-center mt-4 text-center">
         {resendTimer === 0 ? (
           <div>

@@ -1,4 +1,5 @@
 import Navbar from "@/sections/Navbar";
+import Footer from "@/components/ui/footer/Footer";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@/context/ThemeProvider";
@@ -28,7 +29,8 @@ export default function RootLayout({
         <ThemeProvider>
         <AuthProvider>
           <Navbar/>
-        {children}
+          {children}
+          <Footer/>
         </AuthProvider>
         </ThemeProvider>
       </body>

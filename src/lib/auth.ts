@@ -29,7 +29,7 @@ let userDataGoogle: any;
 
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "/",
+    signIn: "/login",
     error: "/error",
   },
   session: {
@@ -135,18 +135,37 @@ export const authOptions: NextAuthOptions = {
       return true;
     },    
     async session({ session, token }: any) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          ...token,
-          id: token.id,
-          randomKey: token.randomKey,
-          signOutFromGoogle: token.signOutFromGoogle || false, // Tambahkan properti signOutFromGoogle
-        },
-      };
-    },
-    async jwt({ token, user, account }: any) {
+      if (token?.phpDonorData) {
+        const donorData = token.phpDonorData[0]; 
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            ...token,
+            address: donorData?.address || session.user.address,
+            birth_place: donorData?.birth_place || session.user.birth_place,
+            phpDonorData: token.phpDonorData,
+            signOutFromGoogle: token.signOutFromGoogle || false,
+          },
+        };
+      }
+      return session;
+    },      
+    async jwt({ token, user, account, session, trigger }: any) {
+      console.log("Log Session", session, token);
+      if (trigger === "update") {
+        token.full_name = session?.full_name || token.full_name;
+        token.email = session?.email || token.email;
+
+        if (session?.phpDonorData && session.phpDonorData.length > 0) {
+          const donorData = session.phpDonorData[0];
+          
+          token.address = donorData.address || token.address;
+          token.birth_place = donorData.birth_place || token.birth_place;
+        }
+      }      
+    
+      // Regular token processing
       if (user) {
         const u = user as unknown as any;
         return {
@@ -157,13 +176,15 @@ export const authOptions: NextAuthOptions = {
           randomKey: u.randomKey,
         };
       }
+    
       if (account?.provider === "google" && token?.signOut) {
         return {
           ...token,
           signOutFromGoogle: true,
         };
       }
+    
       return token;
-    },
+    },    
   },
 };

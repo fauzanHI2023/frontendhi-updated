@@ -1,5 +1,6 @@
 // dashboardpage.tsx
 import { authOptions } from "@/lib/auth";
+import Link from "next/link";
 import { getServerSession } from "next-auth";
 import DashboardLayout from "@/components/ui/dashboard/DashboardLayout";
 
@@ -30,6 +31,8 @@ const page = async (props: Props) => {
     phpDonorData?: any[];
   } = session?.user || {};
 
+  const donorData = user.phpDonorData || [];
+
   const objectArray = Object.entries(user);
   const filteredFields = ["user_name", "full_name", "email", "register_date"];
 
@@ -49,6 +52,7 @@ const page = async (props: Props) => {
       <main className="flex min-h-screen flex-col px-16 py-12">
         <div className="box mb-4 p-6 flex flex-col gap-y-5 rounded-xl bg-white">
           <h5 className="text-xl font-bold">Informasi Dasar</h5>
+          <Link href="/dashboard/editaccount">Edit Account</Link>
           <div className="flex flex-col gap-y-4">
             {fieldArray.map((field, idx) => (
               <div key={idx} className="flex flex-row">
@@ -65,11 +69,11 @@ const page = async (props: Props) => {
             ))}
           </div>
         </div>
-        {user.phpDonorData && (
+        {donorData && (
           <div className="box p-6 flex flex-col gap-y-5 rounded-xl bg-white">
             <h5 className="text-xl font-bold">Data Pribadi</h5>
             <div className="flex flex-col gap-y-4">
-              {user.phpDonorData.map((data: any, index: number) => (
+              {donorData.map((data: any, index: number) => (
                 <div key={index} className="flex flex-col gap-y-4">
                   <div className="flex flex-row">
                     <span className="mr-2 w-40 font-base text-zinc-800">Alamat</span>

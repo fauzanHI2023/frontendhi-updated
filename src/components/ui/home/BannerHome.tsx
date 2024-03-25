@@ -8,7 +8,7 @@ const BannerHome : React.FC = () => {
     AOS.init();
   }, []);
   return (
-    <section className="flex flex-row w-full h-screen sm:p-24 p-6 sm:pt-24 pt-24 bg-hero-pattern sm:bg-cover bg-contain">
+    <section className="flex flex-row w-full h-screen sm:p-24 p-6 sm:pt-24 pt-24 bg-hero-pattern sm:bg-cover bg-cover bg-center bg-no-repeat">
       <div className="flex sm:flex-row flex-col w-full">
         <div className="flex flex-col sm:w-1/2 w-full justify-center sm:pb-0 pb-8" data-aos="fade-left">
           <h3 className="text-white font-bold sm:text-5xl text-2xl sm:pb-10 pb-3">

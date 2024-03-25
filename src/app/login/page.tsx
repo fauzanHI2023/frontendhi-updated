@@ -134,9 +134,9 @@ const LoginPage = () => {
                 </div>
               </form>
               <div className="flex-col items-center justify-center space-y-4 mt-6">
-                <a href="#" className="w-full text-hi-dark text-sm mb-2">
+                <Link href="/forgotpassword/sendemail" className="w-full text-hi-dark text-sm mb-2">
                   Forgot Password?
-                </a>
+                </Link>
                 <button
                   form="login-form"
                   className={`text-center w-full ${

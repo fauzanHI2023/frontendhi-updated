@@ -8,13 +8,12 @@ import { menuItems } from "@/data/data";
 import SubMenu from "@/components/SubMenu";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdMenu, MdClose } from "react-icons/md";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const callbackUrl = "/dashboard";
   const { data: session } = useSession();
@@ -23,6 +22,8 @@ const Navbar = (props: Props) => {
   const [ showPwlogin, setShowPwLogin ] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [formFilled, setFormFilled] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -95,6 +96,14 @@ const Navbar = (props: Props) => {
     }
   }, [formData]);
 
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showModal]);
+
   const togglePasswordVisibility = () => {
     setShowPwLogin(!showPwlogin);
   };
@@ -109,37 +118,62 @@ const Navbar = (props: Props) => {
     <>
       {" "}
       <header
-        className={`${isHome ? "" : "border-b border-zinc-300 bg-white"} ${
+        className={`${isHome ? "sm:bg-transparent bg-slate-900" : "border-b border-zinc-300 bg-white"} ${
           isPageLogin ? "hidden" : "flex"
         } ${
           isPageRegister ? "hidden" : "flex"
         } absolute flex-center top-0 z-30 py-1 w-full body-font`}
       >
-        <nav className="container w-full justify-between mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <nav className="container w-full justify-between mx-auto flex flex-wrap py-4 px-4 sm:py-4 sm:px-5 sm:flex-row flex-row items-center">
           <Link
             href="/"
             className={`${
               isHome ? "bg-logo-white" : "bg-logo-blue"
-            } w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0`}
+            } w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-0`}
           ></Link>
-          <ul className="hidden sm:flex flex-row">
-            {menuItems.map((item) => (
-              <li
-                key={item.id}
-                className="text-hi-darklight group pl-4 pr-4 text-center"
-              >
-                <Link
-                  href={item.url}
-                  className={`flex flex-row items-center ${
-                    isHome ? "text-white" : ""
-                  }`}
+          <button
+              className="text-xl text-white focus:outline-none md:hidden"
+              onClick={() => setShowMenu(!showMenu)}
+            >
+              {showMenu ? <MdClose /> : <MdMenu />}
+            </button>
+            <ul
+              className={`sm:flex hidden flex-col sm:flex-row sm:space-x-6 mt-4 md:mt-0 sm:relative fixed sm:top-0 top-16 right-0 sm:w-auto w-full`}
+            >
+              {menuItems.map((item) => (
+                <li
+                  key={item.id}
+                  className="relative group text-base font-normal"
                 >
-                  {item.label} <MdKeyboardArrowDown className="ml-1" />
-                </Link>
-                {item.subMenu && <SubMenu items={item.subMenu} />}
-              </li>
-            ))}
-          </ul>
+                  <Link
+                    href={item.url}
+                    className={`flex flex-row items-center ${
+                      isHome ? "text-white" : ""
+                    }`}
+                  >
+                    {item.label} <MdKeyboardArrowDown className="ml-1" />
+                  </Link>
+                  {item.subMenu && <SubMenu items={item.subMenu} />}
+                </li>
+              ))}
+            </ul>
+            <ul
+              className={`${
+                showMenu ? "md:flex" : "hidden"
+              } flex-col mt-4 fixed top-16 right-0 w-full bg-slate-900 py-5 px-4`}
+            >
+              {menuItems.map((item) => (
+                <li
+                  key={item.id}
+                  className="relative group text-white text-base font-normal pb-2"
+                >
+                  <Link href={item.url}>
+                    {item.label}
+                  </Link>
+                  {item.subMenu && <SubMenu items={item.subMenu} />}
+                </li>
+              ))}
+            </ul>
           <Suspense fallback="loading">
             <div className="flex flex-wrap items-center text-base justify-center gap-6">
               {session ? (
@@ -156,13 +190,13 @@ const Navbar = (props: Props) => {
                 <div className="flex flex-row">
                   <button
                     onClick={() => setShowModal(true)}
-                    className="inline-flex items-center bg-white border-0 py-2 px-4 focus:outline-none rounded-3xl text-base text-stone-700 mt-4 md:mt-0 mr-2"
+                    className="h-full inline-flex items-center bg-white border-0 py-2 px-4 focus:outline-none rounded text-base text-stone-700 mt-0 sm:mt-0 mr-2"
                   >
                     Login
                   </button>
                   <Link
                     href="/register"
-                    className="inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded-3xl text-base text-white mt-4 md:mt-0"
+                    className="h-full inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded text-base text-white mt-0 sm:mt-0"
                   >
                     Register
                   </Link>
