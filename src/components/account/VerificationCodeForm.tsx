@@ -1,11 +1,10 @@
-// VerificationCodeForm.tsx
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 
 interface Props {
   email: string;
   onSuccess: () => void;
-  onRequestVerificationCode: (email: string) => void; // Menambahkan prop onSuccess untuk memberi tahu bahwa verifikasi berhasil
+  onRequestVerificationCode: (email: string) => void;
 }
 
 const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVerificationCode }) => {
@@ -56,9 +55,8 @@ const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVeri
   }, [resendTimer]);
 
   const handleResendCode = () => {
-    // Kirim ulang permintaan kode verifikasi dengan email yang disimpan
     onRequestVerificationCode(email);
-    setResendTimer(60); // Reset timer ke 60 detik
+    setResendTimer(60);
   };
 
   return (

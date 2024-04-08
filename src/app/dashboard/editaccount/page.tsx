@@ -14,7 +14,7 @@ const EditAccount: React.FC<Props> = () => {
   const [newBirthPlace, setNewBirthPlace] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { data: session, status, update } = useSession();
+  const { data: session, status, update }: any = useSession();
 
   useEffect(() => {
     console.log("Data session:", session);

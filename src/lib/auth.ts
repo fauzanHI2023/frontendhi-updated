@@ -144,6 +144,12 @@ export const authOptions: NextAuthOptions = {
             ...token,
             address: donorData?.address || session.user.address,
             birth_place: donorData?.birth_place || session.user.birth_place,
+            birth_date: donorData?.birth_date || session.user.birth_date,
+            religion: donorData?.religion || session.user.religion,
+            blood_type: donorData?.blood_type || session.user.blood_type,
+            sex: donorData?.sex || session.user.sex,
+            identity_no: donorData?.identity_no || session.user.identity_no,
+            website: donorData?.website || session.user.website,
             phpDonorData: token.phpDonorData,
             signOutFromGoogle: token.signOutFromGoogle || false,
           },
@@ -156,12 +162,18 @@ export const authOptions: NextAuthOptions = {
       if (trigger === "update") {
         token.full_name = session?.full_name || token.full_name;
         token.email = session?.email || token.email;
+        
+        if (token?.phpDonorData && token.phpDonorData.length > 0) {
+          console.log("Log Session", session, token);
 
-        if (session?.phpDonorData && session.phpDonorData.length > 0) {
-          const donorData = session.phpDonorData[0];
-          
-          token.address = donorData.address || token.address;
-          token.birth_place = donorData.birth_place || token.birth_place;
+          token.phpDonorData[0].address = session?.address || token.address;
+          token.phpDonorData[0].birth_place = session?.birth_place || token.phpDonorData[0].birth_place;
+          token.phpDonorData[0].birth_date = session?.birth_date || token.phpDonorData[0].birth_date;
+          token.phpDonorData[0].religion = session?.religion || token.phpDonorData[0].religion;
+          token.phpDonorData[0].blood_type = session?.blood_type || token.phpDonorData[0].blood_type;
+          token.phpDonorData[0].sex = session?.sex || token.phpDonorData[0].sex;
+          token.phpDonorData[0].identity_no = session?.identity_no || token.phpDonorData[0].identity_no;
+          token.phpDonorData[0].website = session?.website || token.phpDonorData[0].website;
         }
       }      
     
