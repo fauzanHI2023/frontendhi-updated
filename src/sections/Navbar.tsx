@@ -234,7 +234,7 @@ const Navbar = (props: Props) => {
                       type="text"
                       id="username"
                       className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
-                      placeholder="Username"
+                      placeholder="Username or Email"
                       value={formData.username}
                       onChange={handleChange}
                     />

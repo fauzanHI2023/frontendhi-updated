@@ -11,10 +11,10 @@ const SendEmail: React.FC = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [message, setMessage] = useState('');
 
-  const isEmailValid = email.trim() !== ''; // Mengecek apakah email sudah terisi
+  const isEmailValid = email.trim() !== '';
 
   const requestVerificationCode = async () => {
-    if (!isEmailValid) return; // Tidak melakukan request jika email belum terisi
+    if (!isEmailValid) return;
     try {
       const response = await fetch('https://adminx.human-initiative.org/login-api/forgot-password', {
         method: 'POST',
@@ -38,8 +38,8 @@ const SendEmail: React.FC = () => {
   };
 
   const handleVerificationCodeSuccess = () => {
-    setShowVerificationCodeForm(false); // Sembunyikan form verifikasi kode setelah berhasil
-    setShowResetPasswordForm(true); // Tampilkan form reset password setelah verifikasi berhasil
+    setShowVerificationCodeForm(false);
+    setShowResetPasswordForm(true);
   };
 
   return (

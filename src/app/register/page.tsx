@@ -126,6 +126,12 @@ const RegisterPage = () => {
                 />
               </div>
               <div className="flex flex-col">
+                <label htmlFor="">No Handphone</label>
+                <input 
+                  type="text"
+                  name="no_hp"/>
+              </div>
+              <div className="flex flex-col">
                 <label htmlFor="">Email</label>
                 <input
                   type="email"

@@ -1,0 +1,277 @@
+"use client";
+import EditAccount from "@/components/account/EditAccount";
+import EditProfil from "@/components/account/EditProfil";
+import DashboardLayout from "@/components/ui/dashboard/DashboardLayout";
+import { useSession } from "next-auth/react";
+import { Fragment, useState } from "react";
+import ChangePassword from "@/components/account/ChangePassword"; // Import komponen ChangePassword
+
+type Props = {};
+
+type FieldValue = string | number | null | any[] | { [key: string]: string | number | null | undefined };
+
+interface Field {
+  label: string;
+  value: FieldValue;
+}
+
+const formatDate = (dateString: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Date(dateString).toLocaleDateString("id-ID", options);
+};
+
+const Page = (props: Props) => {
+  const session: any = useSession();
+  const [isEditAkun, setisEditAkun] = useState(false);
+  const [isEditProfil, setisEditProfil] = useState(false);
+  const [isChangePassword, setisChangePassword] = useState(false); // State untuk menentukan apakah komponen ChangePassword ditampilkan atau tidak
+  const user: {
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
+    register_date?: string | null | undefined;
+    phpDonorData?: any[];
+    userType?: string | null | undefined;
+    location?: {
+      Provinsi?: string | null | undefined;
+      'Kota/Kabupaten'?: string | null | undefined;
+      Kecamatan?: string | null | undefined;
+      Kelurahan?: string | null | undefined;
+    };
+  } = session?.data?.user || {};
+
+  const donorData = user.phpDonorData || [];
+
+  const objectArray = Object.entries(user);
+  const filteredFields = ["user_name", "full_name", "email", "register_date"];
+
+  const fields: { [key: string]: string } = {
+    user_name: "User Name",
+    full_name: "Nama Lengkap",
+    email: "Email",
+    register_date: "Register Date",
+  };
+
+  const fieldArray: Field[] = objectArray
+  .filter(([key, _]) => filteredFields.includes(key))
+  .map(([key, value]) => {
+    if (key === 'location') {
+      return {
+        label: fields[key],
+        value: value as { [key: string]: string | number | null | undefined }
+      };
+    }
+    return {
+      label: fields[key],
+      value: value
+    };
+  });
+
+  return (
+    <DashboardLayout>
+      <main className="flex min-h-screen flex-col px-16 py-12">
+      {isEditAkun ? (
+          <EditAccount setisEditAkun={setisEditAkun} />
+        ) : isEditProfil ? (
+          <EditProfil setisEditProfil={setisEditProfil} userType={user.userType || ""} />
+        ) : (
+          <Fragment>
+            {!isChangePassword && (
+              <div className="box mb-4 p-6 flex flex-col gap-y-5 rounded-xl bg-white">
+                <div className="flex flex-row justify-between">
+                  <h5 className="text-xl font-bold">Data Akun</h5>
+                  <div className="flex flex-row gap-x-3">
+                    {/* Toggle ChangePassword component */}
+                    <button
+                      className="cursor-pointer text-sky-500"
+                      onClick={() => {
+                        setisChangePassword(true);
+                      }}
+                    >
+                      Edit Kata Sandi
+                    </button>
+                    <button
+                      className="cursor-pointer text-sky-500"
+                      onClick={() => {
+                        setisEditAkun(true);
+                      }}
+                    >
+                      Edit Akun
+                    </button>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-y-4">
+                  {fieldArray.map((field, idx) => (
+                    <div key={idx} className="flex flex-row">
+                      <span className="mr-2 w-40 font-base text-zinc-800">
+                        {field.label}
+                      </span>
+                      {field.label === "Register Date" && typeof field.value === "string" ? (
+                        <span>{formatDate(field.value)}</span>
+                      ) : (
+                        <span className="text-zinc-700">{String(field.value)}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Tampilkan ChangePassword jika isChangePassword true */}
+            {isChangePassword && <ChangePassword setisChangePassword={setisChangePassword} />}
+            {Object.keys(donorData).length > 0 && !isChangePassword && (
+              <div className="box p-6 flex flex-col gap-y-5 rounded-xl bg-white">
+                <div className="flex flex-row justify-between">
+                  <h5 className="text-xl font-bold">Data Profil</h5>
+                  <div
+                    className="cursor-pointer text-sky-500"
+                    onClick={() => {
+                      setisEditProfil(true);
+                    }}
+                  >
+                    Edit Data Profil
+                  </div>
+                </div>
+                <div className="flex flex-col gap-y-4">
+                  {user.location && (
+                      <div className="flex flex-col gap-y-4">
+                        {Object.entries(user.location).map(([key, value], index) => (
+                          <div key={index} className="flex flex-row">
+                            <span className="mr-2 w-40 font-base text-zinc-800">
+                              {key}
+                            </span>
+                            <span>{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                  )}
+                  {Array.isArray(donorData) && donorData.map((data: any, index: number) => (
+                    <div key={index} className="flex flex-col gap-y-4">
+                      {user.userType === "personal" && (
+                        <>
+                          <div className="flex flex-col gap-y-4">
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Jenis Kelamin
+                              </span>
+                              <span>{data?.sex === 1 ? "Pria" : "Wanita"}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Tempat Lahir
+                              </span>
+                              <span>{data?.birth_place}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Tanggal Lahir
+                              </span>
+                              <span>{formatDate(data?.birth_date)}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Golongan Darah
+                              </span>
+                              <span>{data?.blood_type}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Agama
+                              </span>
+                              <span>{data?.religion}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Kewarganegaraan
+                              </span>
+                              <span>{data?.country_id === 100 ? "Indonesia" : data?.country_id}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Alamat
+                              </span>
+                              <span>{data?.address}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                No. HP
+                              </span>
+                              <span>{data?.identity_no}</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      {user.userType === "company" && (
+                        <>
+                          <div className="flex flex-col gap-y-4">
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Alamat
+                              </span>
+                              <span>{data?.address}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                No. HP
+                              </span>
+                              <span>{data?.identity_no}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Nama PIC
+                              </span>
+                              <span>{data?.name_pic}</span>
+                            </div>
+                            <div className="flex flex-row">
+                              <span className="mr-2 w-40 font-base text-zinc-800">
+                                Kontak PIC
+                              </span>
+                              <span>{data?.contact_pic}</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      <div className="flex flex-col gap-y-4">
+                        <h5 className="text-base font-bold text-zinc-900">Media Sosial</h5>
+                        <div className="flex flex-row">
+                          <span className="mr-2 w-40 font-base text-zinc-800">
+                            Instagram
+                          </span>
+                          <span>{data?.instagram}</span>
+                        </div>
+                        <div className="flex flex-row">
+                          <span className="mr-2 w-40 font-base text-zinc-800">
+                            Linkedin
+                          </span>
+                          <span>{data?.linkedin}</span>
+                        </div>
+                        <div className="flex flex-row">
+                          <span className="mr-2 w-40 font-base text-zinc-800">
+                            facebook
+                          </span>
+                          <span>{data?.facebook}</span>
+                        </div>
+                        <div className="flex flex-row">
+                          <span className="mr-2 w-40 font-base text-zinc-800">
+                            Website
+                          </span>
+                          <span>{data?.website}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Fragment>
+        )}
+      </main>
+    </DashboardLayout>
+  );
+};
+
+export default Page;

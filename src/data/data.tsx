@@ -11,6 +11,7 @@ import { MdFlood } from "react-icons/md";
 import { FaChildren } from "react-icons/fa6";
 import { SiPowerpages } from "react-icons/si";
 import { GiDrawbridge } from "react-icons/gi";
+import { RxDashboard } from "react-icons/rx";
 
 export const menuItems = [
     { 
@@ -30,7 +31,7 @@ export const menuItems = [
         label: 'Who We Are',
         url: '/whoweare',
         subMenu: [
-            { id: 26, label: 'Vision & Missions', url: '/whoweare/visionmissions' },
+            { id: 26, label: 'Vision & Missions', url: '/whoweare/vision&missions' },
             { id: 27, label: 'Meet Our Management', url: '/whoweare/meetourmanagement' },
             { id: 28, label: 'Our Story', url: '/whoweare/ourstory' },
             { id: 29, label: 'Our Award', url: '/whoweare/ouraward' },
@@ -82,7 +83,8 @@ interface menuDashboard {
     icon: string;
   }
 export const menuDashboard = [
-    { label: 'Akun Saya', url: '/dashboard', icon: <FaUserAlt /> },
+    { label: 'Dashboard', url: '/dashboard', icon: <RxDashboard /> },
+    { label: 'Akun Saya', url: '/dashboard/myaccount', icon: <FaUserAlt /> },
     { label: 'Donasi', url: '/dashboard/donasi', icon: <TbReportMoney /> },
     { label: 'Riwayat Donasi', url: '/dashboard/riwayatdonasi', icon: <RiFileList2Fill /> },
     { label: 'Beneficeries', url: '/dashboard/beneficeries', icon: <FiDownloadCloud /> },

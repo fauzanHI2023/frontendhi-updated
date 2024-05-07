@@ -1,3 +1,4 @@
+import { Md5 } from "ts-md5";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -75,9 +76,12 @@ export const authOptions: NextAuthOptions = {
         if (!ress?.success) {
           return null;
         }
+        console.log("phpDonorData:", ress.phpDonorData);
         return {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
+          location: ress.location,
+          userType: ress.userType,
           randomKey: "Random",
         };
       },
@@ -116,6 +120,8 @@ export const authOptions: NextAuthOptions = {
         userDataGoogle = {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
+          location: ress.location,
+          userType: ress.userType,
           signOutFromGoogle: false,
           randomKey: "Random",
         };
@@ -123,8 +129,10 @@ export const authOptions: NextAuthOptions = {
         return {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
+          location: ress.location,
+          userType: ress.userType,
           randomKey: "Random",
-        };
+        };  
       } else {
         // Update userDataGoogle for non-Google sign-in
         userDataGoogle = {
