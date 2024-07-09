@@ -3,6 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
+import LocationAutocomplete from "./EditLocation";
 
 type Props = {
   setisEditProfil: (e: boolean) => void;
@@ -19,7 +20,13 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
   const [newBloodType, setNewBloodType] = useState("");
   const [newGender, setNewGender] = useState("");
   const [newIdentity, setNewIdentity] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newInstagram, setNewInstagram] = useState("");
+  const [newLinkedin, setNewLinkedin] = useState("");
+  const [newFacebook, setNewFacebook] = useState("");
+  const [newYoutube, setNewYoutube] = useState("");
   const [newWebsite, setNewWebsite] = useState("");
+  const [lastSelectedId, setLastSelectedId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const router = useRouter();
   const { data: session, status, update }: any = useSession();
@@ -41,6 +48,21 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
         setNewIdentity(session.user.phpDonorData[0].identity_no || "");
         setNewWebsite(session.user.phpDonorData[0].website || "");
       }
+
+      if (session.user.contactInformation && session.user.contactInformation.length > 0) {
+        const contactInfo = session.user.contactInformation[0];
+        setNewInstagram(contactInfo.instagram || "");
+        setNewFacebook(contactInfo.facebook || "");
+        setNewLinkedin(contactInfo.linkedin || "");
+        setNewYoutube(contactInfo.youtube || "");
+        setNewWebsite(contactInfo.website || "");
+      }
+
+      if (session.user.phones && session.user.phones.length > 0) {
+        const phoneInfo = session.user.phones[0];
+        setNewPhone(phoneInfo.phone_no || "");
+      }
+      // console.log(session.user.phones);
     }
   }, [session]);
 
@@ -72,6 +94,12 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             sex: newGender,
             identity_no: newIdentity,
             website: newWebsite,
+            location_id: lastSelectedId,
+            instagram: newInstagram,
+            linkedin: newLinkedin,
+            youtube: newYoutube,
+            facebook: newFacebook,
+            phone_no: newPhone,
           }),
         }
       );
@@ -97,6 +125,12 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
         sex: newGender,
         identity_no: newIdentity,
         website: newWebsite,
+        location_id: lastSelectedId,
+        instagram: newInstagram,
+        linkedin: newLinkedin,
+        facebook: newFacebook,
+        youtube: newYoutube,
+        phone_no: newPhone,
       });
 
       // Fetch updated data after update
@@ -130,6 +164,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
         sex: updatedData.sex,
         identity_no: updatedData.identity_no,
         website: updatedData.website,
+        location_id: updatedData.location_id,
       });
       // console.log("Update result:", updateResult);
       // console.log("Successfully updated user data");
@@ -147,7 +182,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
 
   return (
     <Fragment>
-      <div className="box mb-4 p-6 bg-white rounded-xl">
+      <div className="box mb-4 p-6 dark:bg-slate-900 bg-white rounded-xl">
         {userType === "personal" && (
           <>
             <div className="flex flex-row justify-between mb-4">
@@ -165,7 +200,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Tempat Lahir
               </label>
               <input
@@ -176,7 +211,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Tanggal Lahir
               </label>
               <input
@@ -189,7 +224,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             <div className="mb-4">
               <label
                 htmlFor="gender"
-                className="block text-gray-700 font-bold mb-2"
+                className="block dark:text-slate-200 text-gray-700 font-bold mb-2"
               >
                 Jenis Kelamin
               </label>
@@ -205,7 +240,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Golongan Darah
               </label>
               <input
@@ -216,7 +251,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Agama
               </label>
               <select
@@ -236,7 +271,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Alamat
               </label>
               <input
@@ -247,13 +282,21 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
-                No KTP
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+                Provinsi
+              </label>
+              <LocationAutocomplete
+                onLastSelectedChange={(id: number) => setLastSelectedId(id)}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+                No Hp
               </label>
               <input
                 type="text"
-                value={newIdentity}
-                onChange={(e) => setNewIdentity(e.target.value)}
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
               />
             </div>
@@ -276,7 +319,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
                 Alamat
               </label>
               <input
@@ -286,11 +329,63 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
               />
             </div>
+            <div className="mb-4">
+              <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+                Provinsi
+              </label>
+              <LocationAutocomplete
+                onLastSelectedChange={(id: number) => setLastSelectedId(id)}
+              />
+            </div>
           </>
         )}
         <div className="mb-4">
-          <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
-            Media Sosial Website
+          <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+            Instagram
+          </label>
+          <input
+            type="text"
+            value={newInstagram}
+            onChange={(e) => setNewInstagram(e.target.value)}
+            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+            Linkedin
+          </label>
+          <input
+            type="text"
+            value={newLinkedin}
+            onChange={(e) => setNewLinkedin(e.target.value)}
+            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+            Facebook
+          </label>
+          <input
+            type="text"
+            value={newFacebook}
+            onChange={(e) => setNewFacebook(e.target.value)}
+            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+            Youtube
+          </label>
+          <input
+            type="text"
+            value={newYoutube}
+            onChange={(e) => setNewYoutube(e.target.value)}
+            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="text" className="block dark:text-slate-200 text-gray-700 font-bold mb-2">
+            Website
           </label>
           <input
             type="text"

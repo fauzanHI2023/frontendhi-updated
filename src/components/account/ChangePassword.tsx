@@ -28,13 +28,13 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
     try {
       // Validate current password
       if (currentPassword !== session.user.passwd) {
-        setError("Current password is incorrect");
+        setError("Kata Sandi sekarang tidak cocok");
         return;
       }
 
       // Validate new password and confirm password match
       if (newPassword !== confirmPassword) {
-        setError("New password and confirm password do not match");
+        setError("Kata sandi baru dan kata sandi konfirmasi tidak cocok");
         return;
       }
       // Update backend
@@ -96,7 +96,7 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
 
   return (
     <Fragment>
-      <div className="box mb-4 p-6 bg-white rounded-xl">
+      <div className="box mb-4 p-6 bg-white dark:bg-slate-900 rounded-xl">
         <div className="flex flex-row justify-between mb-4">
           <div
             className="flex flex-row justify-center items-center cursor-pointer"
@@ -112,39 +112,42 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="currentPassword" className="block text-gray-700 font-bold mb-2">
-            Current Password
+          <label htmlFor="currentPassword" className="block text-gray-700 dark:text-slate-200 font-bold mb-2">
+            Kata Sandi Saat Ini
           </label>
           <input
             type={showhidePassword ? 'text' : 'password'}
             id="currentPassword"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            placeholder="Masukkan Kata Sandi Saat Ini"
+            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="newPassword" className="block text-gray-700 font-bold mb-2">
-            New Password
+          <label htmlFor="newPassword" className="block text-gray-700 dark:text-slate-200 font-bold mb-2">
+            Kata Sandi Baru
           </label>
           <input
             type={showhidePassword ? 'text' : 'password'}
             id="newPassword"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            placeholder="Masukkan Kata Sandi Baru"
+            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="confirmPassword" className="block text-gray-700 font-bold mb-2">
-            Confirm Password
+          <label htmlFor="confirmPassword" className="block text-gray-700 dark:text-slate-200 font-bold mb-2">
+            Konfirmasi Sandi Baru 
           </label>
           <input
             type={showhidePassword ? 'text' : 'password'}
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            placeholder="Masukkan Konfirmasi Sandi Baru"
+            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="flex flex-row justify-between items-center">
@@ -153,7 +156,7 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
             className="flex flex-row items-center pr-3 gap-x-2"
             onClick={togglePasswordVisibility}
           >
-            Show Password 
+            Lihat Password
             {showhidePassword ? 
             <input type="checkbox" className="w-5 h-5" checked /> : 
             <input type="checkbox" className="w-5 h-5" />}

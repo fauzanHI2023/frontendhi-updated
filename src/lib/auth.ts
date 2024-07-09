@@ -24,6 +24,7 @@ declare module "next-auth" {
     deleted_stamp: string;
     _history: string;
     phpDonorData?: any[];
+    contactInformation: any[];
   }
 }
 let userDataGoogle: any;
@@ -81,6 +82,8 @@ export const authOptions: NextAuthOptions = {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
           location: ress.location,
+          phones: ress.phones,
+          contactInformation: ress.contactInformation,
           userType: ress.userType,
           randomKey: "Random",
         };
@@ -121,6 +124,8 @@ export const authOptions: NextAuthOptions = {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
           location: ress.location,
+          phones: ress.phones,
+          contactInformation: ress.contactInformation,
           userType: ress.userType,
           signOutFromGoogle: false,
           randomKey: "Random",
@@ -130,6 +135,8 @@ export const authOptions: NextAuthOptions = {
           ...ress.user,
           phpDonorData: ress.phpDonorData,
           location: ress.location,
+          phones: ress.phones,
+          contactInformation: ress.contactInformation,
           userType: ress.userType,
           randomKey: "Random",
         };  
@@ -141,7 +148,7 @@ export const authOptions: NextAuthOptions = {
         };
       }
       return true;
-    },    
+    },        
     async session({ session, token }: any) {
       if (token?.phpDonorData) {
         const donorData = token.phpDonorData[0]; 
@@ -158,7 +165,56 @@ export const authOptions: NextAuthOptions = {
             sex: donorData?.sex || session.user.sex,
             identity_no: donorData?.identity_no || session.user.identity_no,
             website: donorData?.website || session.user.website,
+            location_id: donorData?.location_id || session.user.location_id,
             phpDonorData: token.phpDonorData,
+            signOutFromGoogle: token.signOutFromGoogle || false,
+          },
+        };
+      }
+
+      if (token?.location) {
+        const location = token.location[0]; 
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            ...token,
+            Provinsi: location?.Provinsi.location_name || session.user.Provinsi.location_name,
+            Kecamatan: location?.Kecamatan.location_name || session.user.Kecamatan.location_name,
+            Kelurahan: location?.Kelurahan.location_name || session.user.Kelurahan.location_name,
+            location: token.location,
+            signOutFromGoogle: token.signOutFromGoogle || false,
+          },
+        };
+      }
+
+      if (token?.contactInformation) {
+        const contactData = token.contactInformation[0]; 
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            ...token,
+            instagram: contactData?.instagram || session.user.instagram,
+            facebook: contactData?.facebook || session.user.facebook,
+            linkedin: contactData?.linkedin || session.user.linkedin,
+            youtube: contactData?.youtube || session.user.youtube,
+            website: contactData?.website || session.user.website,
+            contactInformation: token.contactInformation,
+            signOutFromGoogle: token.signOutFromGoogle || false,
+          },
+        };
+      }
+
+      if (token?.phones) {
+        const phoneData = token.phones[0]; 
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            ...token,
+            phone_no: phoneData?.phone_no || session.user.phone_no,
+            contactInformation: token.contactInformation,
             signOutFromGoogle: token.signOutFromGoogle || false,
           },
         };
@@ -182,6 +238,31 @@ export const authOptions: NextAuthOptions = {
           token.phpDonorData[0].sex = session?.sex || token.phpDonorData[0].sex;
           token.phpDonorData[0].identity_no = session?.identity_no || token.phpDonorData[0].identity_no;
           token.phpDonorData[0].website = session?.website || token.phpDonorData[0].website;
+          token.phpDonorData[0].location_id = session?.location_id || token.phpDonorData[0].location_id;
+        }
+
+        if (token?.location && token.location.length > 0){
+          console.log("Log Session", session, token);
+
+          token.location[0].Provinsi.location_name = session?.Provinsi.location_name || token.location[0].Provinsi.location_name;
+          token.location[0].Kecamatan.location_name = session?.Kecamatan.location_name || token.location[0].Kecamatan.location_name;
+          token.location[0].Kelurahan.location_name = session?.Kelurahan.location_name || token.location[0].Kelurahan.location_name;
+        }
+
+        if (token?.contactInformation && token.contactInformation.length > 0){
+          console.log("Log Session", session, token);
+
+          token.contactInformation[0].instagram = session?.instagram || token.contactInformation[0].instagram;
+          token.contactInformation[0].facebook = session?.facebook || token.contactInformation[0].facebook;
+          token.contactInformation[0].linkedin = session?.linkedin || token.contactInformation[0].linkedin;
+          token.contactInformation[0].youtube = session?.youtube || token.contactInformation[0].youtube;
+          token.contactInformation[0].website = session?.website || token.contactInformation[0].website;
+        }
+
+        if (token?.phones && token.phones.length > 0){
+          console.log("Log Session", session, token);
+
+          token.phones[0].phone_no = session?.phone_no || token.phones[0].phone_no;
         }
       }      
     

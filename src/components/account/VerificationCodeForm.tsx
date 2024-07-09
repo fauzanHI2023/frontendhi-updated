@@ -61,7 +61,7 @@ const VerificationCodeForm: React.FC<Props> = ({ email, onSuccess, onRequestVeri
 
   return (
     <div className="flex flex-col border rounded-xl border-stone 100 shadow-md p-6 mt-8 w-2/5">
-      <h2 className="text-2xl font-bold text-center text-zinc-600">Verification Code Form</h2>
+      <h2 className="text-2xl font-bold text-center text-zinc-600">Verifikasi Kode</h2>
       <p className="text-base text-zinc-400 text-center py-3">A verification code has been sent via e-mail to {email}</p>
       <div className="flex flex-col items-center mb-6">
         <input

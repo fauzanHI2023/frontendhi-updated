@@ -10,13 +10,24 @@ import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
 import { MdKeyboardArrowDown, MdMenu, MdClose } from "react-icons/md";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
+    const { setTheme } = useTheme();
   const router = useRouter();
-  const callbackUrl = "/dashboard";
   const { data: session } = useSession();
+  const callbackUrl = "/dashboard";
   const user: any = session?.user;
   const pathname = usePathname();
   const [ showPwlogin, setShowPwLogin ] = useState(false);
@@ -24,6 +35,8 @@ const Navbar = (props: Props) => {
   const [formFilled, setFormFilled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -35,7 +48,6 @@ const Navbar = (props: Props) => {
         redirect: false,
         usernameOrEmail: username,
         password: password,
-        callbackUrl,
       });
       if (!res?.error) {
         setShowModal(false);
@@ -48,7 +60,6 @@ const Navbar = (props: Props) => {
           timer: 2500,
         });
         router.push(callbackUrl);
-        close
       } else {
         Swal.fire({
           position: "center",
@@ -66,18 +77,11 @@ const Navbar = (props: Props) => {
 
   const handleLoginGoogle = async () => {
     try {
-      await signIn("google", { callbackUrl });
+      await signIn("google");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    // Jika sudah login, redirect ke dashboard
-    if (session) {
-      router.push(callbackUrl);
-    }
-  }, [session, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -114,11 +118,16 @@ const Navbar = (props: Props) => {
 
   const isPageRegister = pathname === "/register";
 
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCartItems(cartItems);
+  }, []);
+
   return (
     <>
       {" "}
       <header
-        className={`${isHome ? "sm:bg-transparent bg-slate-900" : "border-b border-zinc-300 bg-white"} ${
+        className={`${isHome ? "sm:bg-transparent" : "border-b border"} bg-background ${
           isPageLogin ? "hidden" : "flex"
         } ${
           isPageRegister ? "hidden" : "flex"
@@ -128,11 +137,11 @@ const Navbar = (props: Props) => {
           <Link
             href="/"
             className={`${
-              isHome ? "bg-logo-white" : "bg-logo-blue"
+              isHome ? "bg-logo-blue" : "bg-logo-blue"
             } w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-0`}
           ></Link>
           <button
-              className="text-xl text-white focus:outline-none md:hidden"
+              className="text-xl focus:outline-none md:hidden"
               onClick={() => setShowMenu(!showMenu)}
             >
               {showMenu ? <MdClose /> : <MdMenu />}
@@ -148,7 +157,7 @@ const Navbar = (props: Props) => {
                   <Link
                     href={item.url}
                     className={`flex flex-row items-center ${
-                      isHome ? "text-white" : ""
+                      isHome ? "" : ""
                     }`}
                   >
                     {item.label} <MdKeyboardArrowDown className="ml-1" />
@@ -160,12 +169,12 @@ const Navbar = (props: Props) => {
             <ul
               className={`${
                 showMenu ? "md:flex" : "hidden"
-              } flex-col mt-4 fixed top-16 right-0 w-full bg-slate-900 py-5 px-4`}
+              } flex-col mt-4 fixed top-16 right-0 w-full bg-background py-5 px-4`}
             >
               {menuItems.map((item) => (
                 <li
                   key={item.id}
-                  className="relative group text-white text-base font-normal pb-2"
+                  className="relative group text-base font-normal pb-2"
                 >
                   <Link href={item.url}>
                     {item.label}
@@ -174,13 +183,66 @@ const Navbar = (props: Props) => {
                 </li>
               ))}
             </ul>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div
+            className="relative"
+            onMouseEnter={() => setShowCartDropdown(true)}
+            onMouseLeave={() => setShowCartDropdown(false)}
+          >
+            <AiOutlineShoppingCart className="text-2xl cursor-pointer" />
+            {showCartDropdown && (
+              <div className="absolute right-0 mt-2 w-[464px] bg-white border rounded shadow-lg z-20">
+                <h3 className="text-lg font-semibold p-4 border-b">Keranjang</h3>
+                <ul className="p-4 flex flex-col gap-y-5">
+                  {cartItems.length > 0 ? (
+                    cartItems.map((item) => (
+                      <li key={item.product_id} className="mb-2 flex justify-between">
+                        <span className="truncate w-[250px]">{item.name}</span>
+                        <span>Rp{item.price}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-center text-gray-500">Keranjang kosong.</li>
+                  )}
+                </ul>
+                {cartItems.length > 0 && (
+                  <div className="p-4 border-t">
+                    <Link href="/checkout">
+                      <button className="w-full bg-blue-600 text-white py-2 rounded">
+                        Checkout
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <Suspense fallback="loading">
             <div className="flex flex-wrap items-center text-base justify-center gap-6">
               {session ? (
                 <Fragment>
                   <Link
                     href="/dashboard"
-                    className={`${isHome ? "text-white" : ""} flex`}
+                    className={`${isHome ? "" : ""} flex`}
                   >
                     Hi, {user?.full_name}
                   </Link>
@@ -190,13 +252,13 @@ const Navbar = (props: Props) => {
                 <div className="flex flex-row">
                   <button
                     onClick={() => setShowModal(true)}
-                    className="h-full inline-flex items-center bg-white border-0 py-2 px-4 focus:outline-none rounded text-base text-stone-700 mt-0 sm:mt-0 mr-2"
+                    className="h-full inline-flex items-center bg-white border-0 py-2 px-4 focus:outline-none rounded text-sm text-stone-700 mt-0 sm:mt-0 mr-2"
                   >
                     Login
                   </button>
                   <Link
                     href="/register"
-                    className="h-full inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded text-base text-white mt-0 sm:mt-0"
+                    className="h-full inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded text-sm text-white mt-0 sm:mt-0"
                   >
                     Register
                   </Link>
@@ -210,13 +272,13 @@ const Navbar = (props: Props) => {
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative my-6 mx-auto w-96">
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+              <div className="border-0 rounded-lg shadow-lg relative bg-background flex flex-col w-full outline-none focus:outline-none">
                 <div className="flex flex-col items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                   <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    className="p-1 ml-auto bg-transparent border-0  float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                    <span className="bg-transparent h-6 w-6 text-2xl block outline-none focus:outline-none">
                       ×
                     </span>
                   </button>
@@ -257,15 +319,15 @@ const Navbar = (props: Props) => {
                     </div>
                   </form>
                   <div className="flex-col items-center justify-center space-y-4 mt-6">
-                    <a href="#" className="w-full text-hi-dark text-sm mb-2">
+                    <a href="#" className="w-full text-sm mb-2">
                       Forgot Password?
                     </a>
                     <button
                       form="login-form"
                       className={`text-center w-full ${
                         formFilled
-                          ? "bg-sky-600 text-white"
-                          : "bg-zinc-200 text-zinc-500 cursor-not-allowed"
+                          ? "bg-sky-600"
+                          : "bg-zinc-200 cursor-not-allowed"
                       } border-0 py-3 px-4 focus:outline-none rounded text-base ${
                         formFilled ? "" : "pointer-events-none"
                       }`}

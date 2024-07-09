@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
 import Swal from "sweetalert2";
+import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -24,8 +25,7 @@ const LoginPage = () => {
       const res = await signIn("credentials", {
         redirect: false,
         usernameOrEmail: username,
-        password: password,
-        callbackUrl,
+        password: password
       });
       if (!res?.error) {
         Swal.fire({
@@ -54,18 +54,11 @@ const LoginPage = () => {
 
   const handleLoginGoogle = async () => {
     try {
-      await signIn("google", { callbackUrl });
+      await signIn("google");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    // Jika sudah login, redirect ke dashboard
-    if (session) {
-      router.push(callbackUrl);
-    }
-  }, [session, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -88,15 +81,15 @@ const LoginPage = () => {
     setShowPwLogin(!showPwlogin);
   };
 
-  return (
-    <main>
-      <div className="border rounded-xl border-stone 300 shadow-md justify-center items-center flex min-h-screen flex-col items-center">
+  return (  
+    <main className="bg-background">
+      <div className="border rounded-xl border-stone dark:bg-slate-900 bg-slate-200 300 shadow-md justify-center items-center flex min-h-screen flex-col items-center">
         <Link
           href="/"
           className="bg-logo-blue w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
         ></Link>
         <div className="relative my-6 mx-auto w-1/3">
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-background outline-none focus:outline-none">
             <div className="flex flex-col items-start justify-between p-5">
               <h3 className="w-full text-center text-3xl font-semibold">
                 Login
@@ -110,7 +103,7 @@ const LoginPage = () => {
               >
                 <input
                   id="username"
-                  className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
+                  className="w-full border border-solid autofill:!bg-slate-950 border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg placeholder:text-[#919EAB] dark:!bg-slate-950 bg-white dark:text-white text-slate-950 focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                   placeholder="Username or Email"
                   value={formData.username}
                   onChange={handleChange}
@@ -118,7 +111,7 @@ const LoginPage = () => {
                 <div className="relative">
                   <input
                     id="password"
-                    className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
+                    className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg placeholder:text-[#919EAB] dark:bg-slate-950 bg-white dark:text-white text-slate-950 focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                     placeholder="Password"
                     type={showPwlogin ? 'text' : 'password'}
                     value={formData.password}
@@ -134,40 +127,42 @@ const LoginPage = () => {
                 </div>
               </form>
               <div className="flex-col items-center justify-center space-y-4 mt-6">
-                <Link href="/forgotpassword/sendemail" className="w-full text-hi-dark text-sm mb-2">
+                <Link href="/forgotpassword/sendemail" className="w-full text-sm mb-2">
                   Forgot Password?
                 </Link>
-                <button
+                <Button
                   form="login-form"
                   className={`text-center w-full ${
                     formFilled
-                      ? "bg-sky-600 text-white"
-                      : "bg-zinc-200 text-zinc-500 cursor-not-allowed"
+                      ? "dark:bg-white bg-blue-700 dark:text-slate-950 text-white"
+                      : "cursor-not-allowed dark:bg-slate-500 bg-blue-950 dark:text-slate-200 text-blue-200"
                   } border-0 py-3 px-4 focus:outline-none rounded text-base ${
                     formFilled ? "" : "pointer-events-none"
                   }`}
                   type="submit"
                   disabled={!formFilled}
+                  variant="outline" size="icon"
                 >
                   Login
-                </button>
+                </Button>
                 <div className="flex flex-row text-center my-4">
-                  <p className="text-stone-700 text-base">
+                  <p className="text-base">
                     Don&apos;t have an account yet?
                   </p>
                   <Link href="/register" className="text-sky-500">
                     Register
                   </Link>
                 </div>
-                <button
-                  className="w-full border border-zinc-600 rounded px-4 py-3 flex flex-row items-center justify-center"
+                <Button
+                  className="w-full border rounded px-4 py-3 flex flex-row items-center justify-center"
                   onClick={handleLoginGoogle}
+                  variant="outline" size="icon"
                 >
                   <span className="pr-2 text-xl">
                     <FcGoogle />
                   </span>
                   Sign in with Google
-                </button>
+                </Button>
               </div>
             </div>
           </div>

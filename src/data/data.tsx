@@ -77,22 +77,36 @@ export const menuItems = [
     },
 ];
 
+
+interface SubMenu {
+    label: string;
+    url: string;
+}
+
 interface menuDashboard {
     label: string;
     url: string;
     icon: string;
-  }
+    subMenu?: SubMenu[];
+}
 export const menuDashboard = [
     { label: 'Dashboard', url: '/dashboard', icon: <RxDashboard /> },
     { label: 'Akun Saya', url: '/dashboard/myaccount', icon: <FaUserAlt /> },
-    { label: 'Donasi', url: '/dashboard/donasi', icon: <TbReportMoney /> },
-    { label: 'Riwayat Donasi', url: '/dashboard/riwayatdonasi', icon: <RiFileList2Fill /> },
+    { 
+        label: 'Donasi', 
+        url: '/dashboard/donasi',
+        icon: <TbReportMoney />,
+        subMenu: [
+            { label: 'Donasi Individu', url: '/dashboard/donasi/donasiindividu' },
+            { label: 'Riwayat Donasi', url: '/dashboard/riwayatdonasi' }
+        ]
+    },
+    { label: 'CSR Services', url: '/dashboard/csrservices', icon: <RiCustomerService2Line /> },
     { label: 'Beneficeries', url: '/dashboard/beneficeries', icon: <FiDownloadCloud /> },
     { label: 'Volunteer', url: '/dashboard/volunteer', icon: <FaPeopleGroup /> },
     { label: 'Karir', url: '/dashboard/karir', icon: <RiHomeOfficeFill /> },
     { label: 'Library', url: '/dashboard/library', icon: <IoLibrary /> },
     { label: 'Implementator Program', url: '/dashboard/implementorprogram', icon: <RiMiniProgramFill /> },
-    { label: 'CSR Services', url: '/dashboard/csrservices', icon: <RiCustomerService2Line /> },
 ];
 
 interface programCard {
@@ -128,4 +142,6 @@ export const programCard = [
         url: '/whatwedo/infrastructureprogram'
     }
 ]
+
+
   

@@ -3,6 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   setisEditAkun: (e: boolean) => void;
@@ -81,7 +82,6 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
       // console.log("Update result:", updateResult);
       // console.log("Successfully updated user data");
       setisEditAkun(false);
-      router.push('dashboard/myaccout');
     } catch (error) {
       setError("An error occurred while updating data");
     }
@@ -94,7 +94,7 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
 
   return (
     <Fragment>
-      <div className="box mb-4 p-6 bg-white rounded-xl">
+      <div className="box mb-4 p-6 dark:bg-slate-900 bg-white rounded-xl">
         <div className="flex flex-row justify-between mb-4">
           <div
             className="flex flex-row justify-center items-center cursor-pointer"
@@ -110,7 +110,7 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="text" className="block text-gray-700 dark:text-slate-200 font-bold mb-2">
             Name
           </label>
           <input
@@ -121,7 +121,7 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="text" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="text" className="block text-gray-700 dark:text-slate-200 font-bold mb-2">
             Email
           </label>
           <input

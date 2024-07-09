@@ -2,14 +2,12 @@ import Navbar from "@/sections/Navbar";
 import Footer from "@/components/ui/footer/Footer";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { ThemeProvider } from "@/context/ThemeProvider";
 import "./globals.css";
 import AuthProvider from "@/context/SessionProvider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = Poppins({
   subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-poppins',
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
 });
 
@@ -25,15 +23,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.variable}>
-        <ThemeProvider>
-        <AuthProvider>
-          <Navbar/>
-          {children}
-          <Footer/>
-        </AuthProvider>
+      <body className={poppins.className}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          <AuthProvider>
+            <Navbar/>
+            {children}
+            <Footer/>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+

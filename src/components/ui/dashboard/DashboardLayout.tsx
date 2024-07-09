@@ -9,7 +9,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <div className={`bg-secondary-dashboard relative top-0 flex min-h-screen flex-row justify-center px-12 py-24 bg-dark-hi font-poppins`}>
+    <div className={`dark:bg-slate-950 bg-slate-100 relative top-0 flex min-h-screen flex-row justify-center px-12 py-24`}>
       <Sidebar />
       <main className="w-3/4">
         {children}
