@@ -94,8 +94,8 @@ const Page = (props: Props) => {
         ) : (
           <Fragment>
             {!isChangePassword && (
-              <div className="box mb-4 p-6 flex flex-col gap-y-5 border shadow rounded-xl dark:bg-slate-900 bg-white">
-                <div className="flex flex-row justify-between">
+              <div className="box mb-4 p-6 flex flex-col gap-y-5 border shadow-xl rounded-xl dark:bg-slate-900 bg-white">
+                <div className="flex flex-row justify-between text-sm">
                   <h5 className="text-xl font-bold">Data Akun</h5>
                   <div className="flex flex-row gap-x-3">
                     {/* Toggle ChangePassword component */}
@@ -117,7 +117,7 @@ const Page = (props: Props) => {
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-col gap-y-4">
+                <div className="flex flex-col gap-y-4 text-sm">
                   {fieldArray.map((field, idx) => (
                     <div key={idx} className="flex flex-row">
                       <span className="mr-2 w-40 font-base dark:text-white dark:text-white text-zinc-800">
@@ -145,10 +145,10 @@ const Page = (props: Props) => {
                       setisEditProfil(true);
                     }}
                   >
-                    Edit Data Profil
+                    Edit Data
                   </div>
                 </div>
-                <div className="flex flex-col gap-y-4">
+                <div className="flex flex-col gap-y-4 text-sm">
                   {Array.isArray(donorData) && donorData.map((data: any, index: number) => (
                     <div key={index} className="flex flex-col gap-y-4">
                       {user.userType === "personal" && (

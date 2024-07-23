@@ -226,6 +226,7 @@ export const authOptions: NextAuthOptions = {
       if (trigger === "update") {
         token.full_name = session?.full_name || token.full_name;
         token.email = session?.email || token.email;
+        token.csr_status = session?.csr_status || token.csr_status;
         
         if (token?.phpDonorData && token.phpDonorData.length > 0) {
           console.log("Log Session", session, token);

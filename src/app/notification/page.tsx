@@ -1,10 +1,11 @@
-"use client"
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const NotificationPage: React.FC = () => {
     const searchParams = useSearchParams();
-    const orderId = searchParams.get('order_id');
+    const orderId = searchParams?.get('order_id') || ''; // Menggunakan fallback agar tidak null
     const [transactionDetails, setTransactionDetails] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,6 +29,9 @@ const NotificationPage: React.FC = () => {
             };
 
             fetchTransactionDetails();
+        } else {
+            setLoading(false); // Hentikan loading jika orderId tidak ada
+            setError('Order ID is missing');
         }
     }, [orderId]);
 

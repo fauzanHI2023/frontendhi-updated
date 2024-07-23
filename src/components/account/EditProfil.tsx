@@ -169,7 +169,6 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
       // console.log("Update result:", updateResult);
       // console.log("Successfully updated user data");
       setisEditProfil(false);
-      router.push('dashboard/myaccout');
     } catch (error) {
       setError("An error occurred while updating data");
     }

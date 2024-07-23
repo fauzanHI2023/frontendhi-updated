@@ -2,18 +2,40 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { RiDeleteBin6Line } from "react-icons/ri";
+import Image from 'next/image';
+import { ShoppingCart } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+
+interface User {
+  id: number;
+  full_name: string;
+  email: string;
+}
 
 const Checkout: React.FC = () => {
+  const { data: session, status } = useSession();
   const [cart, setCart] = useState<any[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
   const router = useRouter();
+  const [userId, setUserId] = useState<number>(1); // Assuming user_id is 1 for now
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  
 
   const formatPrice = (price: number) => {
     return `Rp ${Number(price).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
   };
 
   useEffect(() => {
+    if (status === "authenticated" && session) {
+      const user = session.user as User;
+      setUserId(user.id ?? 1);
+      setFullName(user.full_name ?? "");
+      setEmail(user.email ?? "");
+    }
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
     setCart(cartItems);
 
@@ -32,7 +54,7 @@ const Checkout: React.FC = () => {
     };
 
     loadSnapScript();
-  }, []);
+  }, [status, session, router]);
 
   const handleDonateNow = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -41,10 +63,12 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // Simulate user authentication
-    const userId = 1; // Replace with actual user ID
-    const fullName = "John Doe"; // Replace with actual user full name
-    const email = "johndoe@example.com"; // Replace with actual user email
+    
+    if (status !== "authenticated") {
+      setNotifMessage("Silahkan Login terlebih dahulu untuk berdonasi.");
+      router.push('/login');
+      return;
+    }
 
     try {
       const selectedItems = cart.filter(item => selectedProducts.includes(item.product_id));
@@ -135,11 +159,14 @@ const Checkout: React.FC = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-row justify-center gap-x-4 px-16 py-36 bg-blue-50 dark:bg-slate-900">
+    <main className="flex min-h-screen flex-row justify-center gap-x-4 px-16 py-36 bg-indigo-50 dark:bg-slate-900">
       <div className="box flex flex-col gap-y-2 w-[800px]">
-        <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+        <div className="flex flex-row justify-between items-center mb-4">
+          <h1 className="text-xl font-semibold text-slate-800 dark:text-white">Checkout</h1>
+          <Link href="/dashboard/donasi/donasiindividu" className="flex flex-row gap-x-2 justify-center items-center bg-sky-600 dark:bg-sky-700 text-white p-2 rounded w-[12rem]"><Plus /> Tambah Donasi</Link>
+        </div>
         {notifMessage && <p className="mb-4 text-red-500">{notifMessage}</p>}
-        <div className="flex flex-row justify-between items-center border shadow rounded-xl dark:bg-slate-900 bg-white p-6">
+        <div className="flex flex-row justify-between items-center shadow-lg rounded-xl dark:bg-slate-800 bg-white p-6 mb-4">
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -158,8 +185,9 @@ const Checkout: React.FC = () => {
         </div>
         {cart.length > 0 ? (
           cart.map((item) => (
-            <div key={item.product_id} className="flex flex-wrap items-center w-full mb-4 border shadow rounded-xl dark:bg-slate-900 bg-white p-6">
-              <h5 className="text-base w-2/5 font-normal dark:text-white text-slate-900 pr-16">
+            <div key={item.product_id} className="flex flex-wrap items-start w-full mb-2 shadow-xl rounded-xl dark:bg-slate-800 bg-white p-6">
+              {/* <Image src={item.product_img} width={120} height={120} className="mr-6" alt={item.name}/> */}
+              <h5 className="text-sm w-2/5 font-normal dark:text-white text-slate-900 pr-16 overflow-hidden h-[40px]">
                 {item.name}
               </h5>
               <p className="flex w-1/5 justify-end">{formatPrice(Number(item.price))}</p>
@@ -182,7 +210,7 @@ const Checkout: React.FC = () => {
           <p>Keranjang kosong.</p>
         )}
       </div>
-      <div className="w-[384px] flex flex-col h-full justify-between border shadow rounded-xl dark:bg-slate-900 bg-white p-6 mt-[60px]">
+      <div className="w-[384px] flex flex-col h-full justify-between shadow-xl rounded-xl dark:bg-slate-800 bg-white p-6 mt-[60px]">
         <h1 className="text-normal font-semibold mb-6">Ringkasan Donasi</h1>
         {cart.length > 0 && (
           <div className="flex flex-col items-center justify-end gap-x-8 mt-4">
@@ -190,7 +218,7 @@ const Checkout: React.FC = () => {
                 <p>Total Donasi</p>
                 <p>{formatPrice(calculateTotalPrice())}</p>
             </div>
-            <button onClick={handleDonateNow} className="bg-blue-800 text-white p-2 rounded w-full">Proses Donasi</button>
+            <button onClick={handleDonateNow} className="flex flex-row gap-x-2 justify-center items-center bg-sky-600 text-white p-2 rounded w-full"><ShoppingCart />Proses Donasi</button>
           </div>
         )}
       </div>

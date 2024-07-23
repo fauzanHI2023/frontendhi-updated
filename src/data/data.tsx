@@ -1,17 +1,18 @@
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt, FaDonate } from "react-icons/fa";
 import { TbReportMoney } from "react-icons/tb";
 import { RiFileList2Fill } from "react-icons/ri";
 import { FiDownloadCloud } from "react-icons/fi";
-import { FaPeopleGroup } from "react-icons/fa6";
+import { FaPeopleGroup, FaSwatchbook } from "react-icons/fa6";
 import { RiHomeOfficeFill } from "react-icons/ri";
 import { IoLibrary } from "react-icons/io5";
 import { RiMiniProgramFill } from "react-icons/ri";
 import { RiCustomerService2Line } from "react-icons/ri";
-import { MdFlood } from "react-icons/md";
+import { MdFlood, MdHistory, MdModelTraining, MdWorkHistory } from "react-icons/md";
 import { FaChildren } from "react-icons/fa6";
 import { SiPowerpages } from "react-icons/si";
 import { GiDrawbridge } from "react-icons/gi";
-import { RxDashboard } from "react-icons/rx";
+import { RxDashboard, RxActivityLog } from "react-icons/rx";
+import { FaPeopleCarryBox } from "react-icons/fa6";
 
 export const menuItems = [
     { 
@@ -101,7 +102,16 @@ export const menuDashboard = [
             { label: 'Riwayat Donasi', url: '/dashboard/riwayatdonasi' }
         ]
     },
-    { label: 'CSR Services', url: '/dashboard/csrservices', icon: <RiCustomerService2Line /> },
+    { 
+        label: 'CSR Services', 
+        url: '/dashboard/csrservices', 
+        icon: <RiCustomerService2Line />,
+        subMenu: [
+            { label: 'Sponsori Program', url: '/dashboard/csrservices/beliprogram'},
+            { label: 'Ajukan Proposal', url: '/dashboard/csrservices/ajukankonsep'}
+        ]
+    },
+    { label: 'Pengajuan Bantuan (CPHP)', url: '/dashboard/cphp', icon: <FiDownloadCloud /> },
     { label: 'Beneficeries', url: '/dashboard/beneficeries', icon: <FiDownloadCloud /> },
     { label: 'Volunteer', url: '/dashboard/volunteer', icon: <FaPeopleGroup /> },
     { label: 'Karir', url: '/dashboard/karir', icon: <RiHomeOfficeFill /> },
@@ -141,6 +151,55 @@ export const programCard = [
         text: 'Initiative for Disaster merupakan kumpulan dari berbagai program yang bertujuan mengurangi dampak bencana',
         url: '/whatwedo/infrastructureprogram'
     }
+]
+
+interface summaryDashboard {
+    icon: string;
+    label: string;
+    angka: string;
+}
+
+export const summaryDashboard = [
+    {
+        icon: <MdHistory className="w-full text-sky-300" size={60}/>,
+        label: 'Akses Masuk',
+        angka: '100'
+    },
+    {
+        icon: <TbReportMoney className="w-full text-sky-300" size={60}/>,
+        label: 'Transaksi',
+        angka: '100'
+    },
+    {
+        icon: <FaDonate className="w-full text-sky-300" size={60}/>,
+        label: 'Donasi',
+        angka: 'Rp 8.000.000'
+    },
+    {
+        icon: <FaPeopleCarryBox className="w-full text-sky-300" size={60}/>,
+        label: 'CSR, GMO, Vendor',
+        angka: '100'
+    },
+    {
+        icon: <MdModelTraining className="w-full text-sky-300" size={60}/>,
+        label: 'HII Pelatihan',
+        angka: '100'
+    },
+    {
+        icon: <RxActivityLog className="w-full text-sky-300" size={60}/>,
+        label: 'Kerelawanan',
+        angka: '100'
+    },
+    {
+        icon: <FaSwatchbook className="w-full text-sky-300" size={60}/>,
+        label: 'Buku',
+        angka: '100'
+    },
+    {
+        icon: <MdWorkHistory className="w-full text-sky-300" size={60}/>,
+        label: 'Pengajuan Bantuan',
+        angka: '100'
+    },
 ]
 
 

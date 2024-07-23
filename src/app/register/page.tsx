@@ -133,7 +133,7 @@ const RegisterPage = () => {
               {registrationType === "personal" && (
                 <div className="form-animate flex flex-col mb-4 gap-y-8 rounded-xl shadow-md p-6 mt-8 w-full bg-background">
                   <h3 className="text-2xl dark:text-white text-slate-700 font-semibold text-center pb-8">
-                    Daftar Donor Personal
+                    Daftar Donatur Personal
                   </h3>
                   <div className="flex flex-col">
                     <input
@@ -141,7 +141,7 @@ const RegisterPage = () => {
                       name="user_name"
                       value={formData.user_name}
                       onChange={handleChange}
-                      placeholder="Username"
+                      placeholder="Nama Pengguna"
                       className={`h-11 px-4 rounded-lg border ${
                         usernameExists
                           ? "border-red-500"
@@ -158,7 +158,7 @@ const RegisterPage = () => {
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleChange}
-                      placeholder="Full Name"
+                      placeholder="Nama Lengkap"
                       className="h-11 px-4 rounded-lg border border-zinc-200 focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                     />
                   </div>
@@ -204,7 +204,7 @@ const RegisterPage = () => {
               {registrationType === "company" && (
                 <div className="form-animate flex flex-col mb-4 gap-y-8 rounded-xl shadow-md p-6 mt-8 w-full bg-background">
                   <h3 className="text-2xl dark:text-white text-slate-700 font-semibold text-center pb-8">
-                    Daftar Donor Company or Community
+                    Daftar Donatur Organisasi/Perusahaan
                   </h3>
                   <div className="flex flex-col">
                     <input
@@ -212,7 +212,7 @@ const RegisterPage = () => {
                       name="user_name"
                       value={formData.user_name}
                       onChange={handleChange}
-                      placeholder="Username"
+                      placeholder="Nama Pengguna"
                       className={`h-11 px-4 rounded-lg border ${
                         usernameExists
                           ? "border-red-500"
@@ -229,7 +229,7 @@ const RegisterPage = () => {
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleChange}
-                      placeholder="Full Name"
+                      placeholder="Nama Organisasi/Perusahaan"
                       className="h-11 px-4 rounded-lg border border-zinc-200 focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                     />
                   </div>

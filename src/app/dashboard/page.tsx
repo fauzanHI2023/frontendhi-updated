@@ -1,19 +1,23 @@
 import React from 'react'
 import DashboardLayout from '@/components/ui/dashboard/DashboardLayout'
+import { summaryDashboard } from '@/data/data'
 import GenderChart from '@/components/chart/GenderChart'
 import OldChart from '@/components/chart/OldChart'
 
 const page = () => {
   return (
     <DashboardLayout>
-      <div className="flex flex-wrap gap-y-4 gap-x-4 px-16 py-12">
-        <div className="flex flex-row w-1/3 dark:bg-slate-900 bg-white rounded-xl p-4">
-          <GenderChart/>
+      <div className="grid grid-cols-4 gap-8 px-16 py-12">
+          {summaryDashboard.map((countSummary, index) => (
+            <div key={index} className="flex flex-row gap-x-4 dark:bg-slate-900 bg-white rounded-xl py-4 px-6">
+              <div className="flex flex-col gap-y-4 justify-between w-[65%]">
+                <div className="text-sm font-semibold text-slate-900">{countSummary.label}</div>
+                <div className="text-lg text-nowrap font-semibold text-slate-500">{countSummary.angka}</div>
+              </div>
+              <div className="mb-2 w-[35%]"><span className="w-full">{countSummary.icon}</span></div>
+            </div>
+          ))}
         </div>
-        <div className="flex flex-row dark:bg-slate-900 bg-white rounded-xl p-4">
-          <OldChart/>
-        </div>
-      </div>
     </DashboardLayout>
   )
 }

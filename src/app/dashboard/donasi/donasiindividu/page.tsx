@@ -8,6 +8,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { Home, Baby, HandHelping, School } from 'lucide-react';
 import { DonateIndividuDisaster, DonateIndividuChildren, DonateIndividuEmpowerment, DonateIndividuInfrastructure } from '@/lib/auth-donasi';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import PopupNotif from '@/components/ui/utility/PopupNotif';
+import Link from 'next/link';
 
 const Page: React.FC = () => {
   const [programIndividuDisaster, setProgramIndividuDisaster] = useState<any[]>([]);
@@ -16,6 +19,8 @@ const Page: React.FC = () => {
   const [programIndividuInfrastruktur, setProgramIndividuInfrastruktur] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
+  const router = useRouter();
+  const [notifMessage, setNotifMessage] = useState('');
 
   useEffect(() => {
     const fetchImageUrl = async (key: string): Promise<string> => {
@@ -55,14 +60,8 @@ const Page: React.FC = () => {
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     cart.push(product);
     localStorage.setItem('cart', JSON.stringify(cart));
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      iconColor: '#75C8FB',
-      title: 'Donasi berhasil ditambahkan',
-      showConfirmButton: false,
-      timer: 2500,
-    });
+    setNotifMessage("Produk Berhasil Ditambahkan.");
+    router.push("/checkout");
   };
 
   const calculateProgress = (grossAmount: number): number => {
@@ -74,10 +73,10 @@ const Page: React.FC = () => {
   return (
     <DashboardLayout>
       <main className="flex min-h-screen flex-col px-16 py-12">
-        <div className="box p-6 flex flex-col gap-y-5 border shadow rounded-xl dark:bg-slate-900 bg-white">
+        <div className="box p-6 flex flex-col gap-y-5 shadow-xl rounded-xl dark:bg-slate-900 bg-white">
           <h5 className="text-xl font-bold">Donasi Individu</h5>
           <Tabs defaultValue="disaster" className="w-full">
-            <TabsList className="w-full flex flex-wrap">
+            <TabsList className="w-full flex flex-wrap justify-start">
               <TabsTrigger value="disaster" className="w-1/4">
                 <Home className="mr-2 h-4 w-4" /> Disaster
               </TabsTrigger>
@@ -97,12 +96,14 @@ const Page: React.FC = () => {
               ) : (
                 programIndividuDisaster.length > 0 ? (
                   programIndividuDisaster.map(({ product, transactionCount, totalGrossAmount }) => (
-                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/3 mb-4">
-                      <div className="w-full">
-                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full" />
-                      </div>
+                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/4 mb-4">
+                      <Link href={`/dashboard/donasi/donasiindividu/${product.slug}`}>
+                        <div className="w-full cursor-pointer">
+                          <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full rounded-md" />
+                        </div>
+                      </Link>
                       <div className="flex flex-col gap-y-3 w-full">
-                        <h5 className="text-base font-semibold dark:text-white text-slate-900">
+                        <h5 className="text-sm font-normal dark:text-white text-slate-900 overflow-hidden h-[40px]">
                           {product.name}
                         </h5>
                         <label className="flex flex-row justify-between w-full cursor-pointer text-blue-800 font-semibold">
@@ -110,7 +111,7 @@ const Page: React.FC = () => {
                           <p>Rp50.000.000</p>
                         </label>
                         <Progress value={calculateProgress(totalGrossAmount)} />
-                        <p className="text-sm font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
+                        <p className="text-xs font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
                         <button onClick={() => addToCart(product)} className="bg-blue-800 text-white p-2 rounded">Tambah Donasi</button>
                       </div>
                     </div>
@@ -120,18 +121,18 @@ const Page: React.FC = () => {
                 )
               )}
             </TabsContent>
-            <TabsContent value="children">
+            <TabsContent value="children" className="py-5">
               {loading ? (
                 <p>Loading Program Children...</p>
               ) : (
                 programIndividuChildren.length > 0 ? (
                   programIndividuChildren.map(({ product, transactionCount, totalGrossAmount }) => (
-                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/3 mb-4">
+                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/4 mb-4">
                       <div className="w-full">
-                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full" />
+                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full rounded-md" />
                       </div>
                       <div className="flex flex-col gap-y-3 w-full">
-                        <h5 className="text-base font-semibold dark:text-white text-slate-900">
+                        <h5 className="text-base font-semibold dark:text-white text-slate-900 overflow-hidden h-[40px]">
                           {product.name}
                         </h5>
                         <label className="flex flex-row justify-between w-full cursor-pointer text-blue-800 font-semibold">
@@ -139,7 +140,7 @@ const Page: React.FC = () => {
                           <p>Rp50.000.000</p>
                         </label>
                         <Progress value={calculateProgress(totalGrossAmount)} />
-                        <p className="text-sm font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
+                        <p className="text-xs font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
                         <button onClick={() => addToCart(product)} className="bg-blue-800 text-white p-2 rounded">Tambah Donasi</button>
                       </div>
                     </div>
@@ -149,18 +150,18 @@ const Page: React.FC = () => {
                 )
               )}
             </TabsContent>
-            <TabsContent value="empowerment">
+            <TabsContent value="empowerment" className="py-5">
               {loading ? (
                 <p>Loading Program Empowerment...</p>
               ) : (
                 programIndividuEmpowerment.length > 0 ? (
                   programIndividuEmpowerment.map(({ product, transactionCount, totalGrossAmount }) => (
-                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/3 mb-4">
+                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/4 mb-4">
                       <div className="w-full">
-                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full" />
+                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full rounded-md" />
                       </div>
                       <div className="flex flex-col gap-y-3 w-full">
-                        <h5 className="text-base font-semibold dark:text-white text-slate-900">
+                        <h5 className="text-base font-semibold dark:text-white text-slate-900 overflow-hidden h-[40px]">
                           {product.name}
                         </h5>
                         <label className="flex flex-row justify-between w-full cursor-pointer text-blue-800 font-semibold">
@@ -168,7 +169,7 @@ const Page: React.FC = () => {
                           <p>Rp50.000.000</p>
                         </label>
                         <Progress value={calculateProgress(totalGrossAmount)} />
-                        <p className="text-sm font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
+                        <p className="text-xs font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
                         <button onClick={() => addToCart(product)} className="bg-blue-800 text-white p-2 rounded">Tambah Donasi</button>
                       </div>
                     </div>
@@ -178,18 +179,18 @@ const Page: React.FC = () => {
                 )
               )}
             </TabsContent>
-            <TabsContent value="infrastruktur">
+            <TabsContent value="infrastruktur" className="py-5">
             {loading ? (
                 <p>Loading Program Infrastruktur...</p>
               ) : (
                 programIndividuInfrastruktur.length > 0 ? (
                   programIndividuInfrastruktur.map(({ product, transactionCount, totalGrossAmount }) => (
-                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/3 mb-4">
+                    <div key={product.product_id} className="flex flex-col gap-y-4 w-1/4 mb-4">
                       <div className="w-full">
-                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full" />
+                        <Image alt={product.name} src={product.product_img} width={200} height={200} className="w-full rounded-md" />
                       </div>
                       <div className="flex flex-col gap-y-3 w-full">
-                        <h5 className="text-base font-semibold dark:text-white text-slate-900">
+                        <h5 className="text-base font-semibold dark:text-white text-slate-900 overflow-hidden h-[40px]">
                           {product.name}
                         </h5>
                         <label className="flex flex-row justify-between w-full cursor-pointer text-blue-800 font-semibold">
@@ -197,7 +198,7 @@ const Page: React.FC = () => {
                           <p>Rp50.000.000</p>
                         </label>
                         <Progress value={calculateProgress(totalGrossAmount)} />
-                        <p className="text-sm font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
+                        <p className="text-xs font-semibold text-blue-900">{transactionCount} orang mendukung program ini</p>
                         <button onClick={() => addToCart(product)} className="bg-blue-800 text-white p-2 rounded">Tambah Donasi</button>
                       </div>
                     </div>
@@ -209,6 +210,11 @@ const Page: React.FC = () => {
             </TabsContent>
           </Tabs>
         </div>
+        <PopupNotif
+            message={notifMessage}
+            duration={3000}
+            onClose={() => setNotifMessage('')}
+        />
       </main>
     </DashboardLayout>
   );

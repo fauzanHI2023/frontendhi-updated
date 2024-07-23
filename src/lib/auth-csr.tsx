@@ -65,3 +65,46 @@ export async function GetSuccessTransaction(userId: string) {
         throw new Error('Data tidak ada');
     }
 }
+
+export async function GetCancelTransaction(userId: string) {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/csr-api/get-cancel-transaction?id=${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+
+        // Format the data
+        const formattedData = data.data.map((transactionData: any) => {
+            const transaction = transactionData.transaction;
+            const item = transactionData.items[0]; // first item
+            const product = item.product;
+
+            let statusText = '';
+            if (transaction.status === 'pending') {
+                statusText = 'Belum Bayar';
+            } else if (transaction.status === 'settlement') {
+                statusText = 'Berhasil';
+            } else if (transaction.status === 'cancel' || transaction.status === 'expire') {
+                statusText = 'Dibatalkan';
+            } else {
+                statusText = transaction.status;
+            }
+
+            return {
+                product_img: product.product_img,
+                name: product.name,
+                category_program: product.category_program,
+                status: statusText,
+                transaction_time: format(new Date(transaction.transaction_time), 'dd MMMM yyyy', { locale: localeId }),
+                gross_amount: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transaction.gross_amount)
+            };
+        });
+
+        return { success: data.success, transactions: formattedData };
+    } catch (error) {
+        throw new Error('Data tidak ada');
+    }
+}

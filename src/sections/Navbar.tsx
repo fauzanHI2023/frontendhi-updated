@@ -77,7 +77,7 @@ const Navbar = (props: Props) => {
 
   const handleLoginGoogle = async () => {
     try {
-      await signIn("google");
+      await signIn("google", { callbackUrl });
     } catch (error) {
       console.log(error);
     }
@@ -210,12 +210,15 @@ const Navbar = (props: Props) => {
           >
             <AiOutlineShoppingCart className="text-2xl cursor-pointer" />
             {showCartDropdown && (
-              <div className="absolute right-0 mt-2 w-[464px] bg-white border rounded shadow-lg z-20">
+              <div className="absolute right-[-14rem] w-[464px] bg-white border rounded shadow-lg z-20">
                 <h3 className="text-lg font-semibold p-4 border-b">Keranjang</h3>
                 <ul className="p-4 flex flex-col gap-y-5">
                   {cartItems.length > 0 ? (
                     cartItems.map((item) => (
-                      <li key={item.product_id} className="mb-2 flex justify-between">
+                      <li key={item.product_id} className="flex flex-row w-full mb-2 flex justify-between">
+                        <div className="flex">
+                          <img src={item.product_img} alt={item.name} className="w-[56px] h-[56px]"/>
+                        </div>
                         <span className="truncate w-[250px]">{item.name}</span>
                         <span>Rp{item.price}</span>
                       </li>
