@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/ui/dashboard/DashboardLayout';
 import { useSession } from 'next-auth/react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs-fe';
+import { BookCheck, ListChecks, BookmarkX } from 'lucide-react';
+
 
 const CsrServices: React.FC = () => {
   const [error, setError] = useState("");
@@ -59,6 +62,22 @@ const CsrServices: React.FC = () => {
           ) : (
             <div className="status-open">
               <p>Selamat Datang di CSR Services</p>
+              <Tabs defaultValue="pending" className="w-full">
+                <TabsList className="w-full flex flex-row">
+                  <TabsTrigger value="pending" className="w-1/3">
+                    <BookCheck className="mr-2 h-4 w-4" /> 
+                  </TabsTrigger>
+                  <TabsTrigger value="paid" className="w-1/3">
+                    <ListChecks className="mr-2 h-4 w-4" /> Selesai
+                  </TabsTrigger>
+                  <TabsTrigger value="cancel" className="w-1/3">
+                    <BookmarkX className="mr-2 h-4 w-4" /> Dibatalkan
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="pending" className="mt-3"></TabsContent>
+                <TabsContent value="paid" className="mt-3"></TabsContent>
+                <TabsContent value="pending" className="mt-3"></TabsContent>
+              </Tabs>
             </div>
           )}
         </div>

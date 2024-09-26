@@ -1,6 +1,8 @@
-@tailwind base;
+  @tailwind base;
   @tailwind components;
   @tailwind utilities;
+
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
   @layer base {
     :root {
@@ -80,6 +82,76 @@
     }
   }
 
+  @layer components {
+    .title-lg-medium {
+      @apply text-slate-700 text-lg font-medium;
+    }
+
+    .title-xl-medium-600 {
+      @apply text-slate-600 text-xl font-medium;
+    }
+
+    .title-lg-semibold {
+      @apply text-slate-700 text-lg font-semibold;
+    }
+
+    .title-lg-bold {
+      @apply text-slate-700 text-lg font-bold;
+    }
+
+    .title-lg-medium-blue {
+      @apply text-sky-500 text-lg font-medium;
+    }
+
+    .title-xl-medium-blue {
+      @apply text-sky-500 text-xl font-medium;
+    }
+
+    .title-xl-medium-black {
+      @apply text-slate-700 text-xl font-medium;
+    }
+
+    .title-2xl-semibold-blue {
+      @apply text-sky-600 text-2xl font-semibold;
+    }
+
+    .title-2xl-semibold-black {
+      @apply text-slate-700 text-2xl font-semibold;
+    }
+
+    .title-2xl-semibold-600 {
+      @apply text-slate-700 text-2xl font-semibold;
+    }
+
+    .title-3xl-semibold-black {
+      @apply text-slate-700 text-3xl font-semibold;
+    }
+
+    .title-3xl-semibold-600 {
+      @apply text-slate-700 text-3xl font-semibold;
+    }
+
+    .title-4xl-extrabold-black {
+      @apply text-slate-700 text-4xl font-extrabold;
+    }
+
+    .title-4xl-extrabold-blue {
+      @apply text-sky-600 text-4xl font-extrabold;
+    }
+
+    .text-p-16 {
+      @apply text-slate-600 text-base font-normal;
+    }
+
+    .text-p-16-white {
+      @apply text-white text-base font-normal;
+    }
+
+    .text-p-14 {
+      @apply text-slate-600 text-sm font-normal;
+    }
+  }
+
   @keyframes slide-in {
     from {
       opacity: 0;
@@ -98,3 +170,108 @@
   .class {
     font-family: var(--font-poppins);
   }
+
+  .font-raleway {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+  }
+
+  .no-visible-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+   
+  .no-visible-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slider-container {
+    max-width: 100vw;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .slick-track{
+    display: flex !important;
+  }
+
+  .slide-stories {
+    width: 648px !important;
+  }
+
+  .slick-slide .slide-content {
+    transform: translateY(12%) scale(0.7);
+    transition-property: opacity, transform;
+    opacity: 0.3;
+    transition-duration: 0.3s;
+  }
+
+  .slick-active .slide-content {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .slick-active .slide-border-year {
+    border-top-width: 4px;
+    border-color: rgb(7 89 133);
+    animation: 0.3s ease-in-out 0s 1 normal none running animation-gu3cl0;
+  }
+
+  .slick-active .slide-border-year time {
+    
+  }
+
+  .publikasi-card:hover span img {
+    transform: translateY(-50%) scale(1.05);
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .publikasi-card span img {
+    transition: all .5s;
+    float: none;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    top: 50%;
+    left: 0;
+  }
+
+  .publikasi-card .download-situation {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+
+  .publikasi-card:hover .download-situation {
+    transition: .5s ease-in animation-down-to-up;
+  }
+
+  @keyframes animation-gu3cl0 {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  @keyframes animation-down-to-up {
+    0% {
+      bottom: 0;
+    }
+    100% {
+      bottom: 100px;
+    }
+  }
+  
+
+
+
+  

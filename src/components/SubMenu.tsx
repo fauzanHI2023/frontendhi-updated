@@ -20,10 +20,10 @@ interface SubMenuProps {
 
 const SubMenu: React.FC<SubMenuProps> = ({ items }) => {
   return (
-    <ul className="hidden group-hover:block absolute">
+    <ul className="hidden group-hover:block absolute bg-white drop-shadow-2xl rounded-lg">
       {items.map((item) => (
-        <li key={item.id}>
-          <Link href={item.url} className="block px-4 py-2 text-sm text-gray-100 bg-slate-950 hover:text-slate-950 hover:bg-gray-100">{item.label}</Link>
+        <li key={item.id} className="w-full">
+          <Link href={item.url} className="block px-4 py-2 text-sm text-sky-700 font-semibold hover:transition hover:ease-in hover:duration-300 break-normal hover:text-white hover:bg-sky-500 w-full">{item.label}</Link>
           {item.subMenu && <SubMenu items={item.subMenu} />}
         </li>
       ))}

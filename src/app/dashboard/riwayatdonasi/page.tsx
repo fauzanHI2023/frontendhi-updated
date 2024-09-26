@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/ui/dashboard/DashboardLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs-fe';
 import { BookCheck, ListChecks, BookmarkX } from 'lucide-react';
 import { GetPendingTransaction, GetSuccessTransaction, GetCancelTransaction } from '@/lib/auth-csr';
 import { useSession } from 'next-auth/react';
@@ -100,8 +100,8 @@ const RiwayatDonasi: React.FC = () => {
                         </div>
                         <div className="flex flex-col justify-center w-3/4 gap-y-12">
                           <div className="flex flex-row justify-between items-center">
-                            <p className="w-3/5 font-semibold text-lg text-gray-700 overflow-hidden h-[60px]">{transaction.name}</p>
-                            <p className="w-[150px] px-4 py-2 rounded-3xl text-center border border-blue-500 bg-blue-50 text-blue-500">{transaction.status}</p>
+                            <p className="w-3/5 font-semibold text-lg text-gray-700 dark:text-white overflow-hidden h-[60px]">{transaction.name}</p>
+                            <p className="w-[150px] px-4 py-2 rounded-3xl text-center border border-blue-500 bg-blue-50 dark:bg-slate-800 text-blue-500">{transaction.status}</p>
                           </div>
                           <div className="flex flex-row justify-between items-center w-3/5">
                             <p className="text-blue-500 capitalize">{transaction.category_program || 'sekali'}</p>
@@ -126,7 +126,7 @@ const RiwayatDonasi: React.FC = () => {
                         </div>
                         <div className="flex flex-col justify-center w-3/4 gap-y-12">
                           <div className="flex flex-row justify-between items-center">
-                            <p className="w-3/5 font-semibold text-lg text-gray-700 overflow-hidden h-[60px]">{transaction.name}</p>
+                            <p className="w-3/5 font-semibold text-lg text-gray-700 dark:text-white overflow-hidden h-[60px]">{transaction.name}</p>
                             <p className="w-1/5 px-4 py-2 rounded-3xl text-center bg-blue-500 text-white">{transaction.status}</p>
                           </div>
                           <div className="flex flex-row justify-between items-center w-3/5">
@@ -152,7 +152,7 @@ const RiwayatDonasi: React.FC = () => {
                         </div>
                         <div className="flex flex-col justify-center w-3/4 gap-y-12">
                           <div className="flex flex-row justify-between items-center">
-                            <p className="w-3/5 font-semibold text-lg text-gray-700 overflow-hidden h-[60px]">{transaction.name}</p>
+                            <p className="w-3/5 font-semibold text-lg text-gray-700 dark:text-white overflow-hidden h-[60px]">{transaction.name}</p>
                             <p className="w-1/5 px-4 py-2 rounded-3xl text-center border border-stone-600 bg-stone-100 text-stone-600">{transaction.status}</p>
                           </div>
                           <div className="flex flex-row justify-between items-center w-3/5">

@@ -117,6 +117,10 @@ const Navbar = (props: Props) => {
   const isPageLogin = pathname === "/login";
 
   const isPageRegister = pathname === "/register";
+  
+  const isPageDonate = pathname === "/takeaction/selfdonate";
+
+  const isPageCollaboration = pathname === "/takeaction/collaborationimpact";
 
   useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -131,6 +135,10 @@ const Navbar = (props: Props) => {
           isPageLogin ? "hidden" : "flex"
         } ${
           isPageRegister ? "hidden" : "flex"
+        } ${
+          isPageDonate ? "sm:bg-transparent" : "border-b border"
+        } ${
+          isPageCollaboration ? "sm:bg-transparent" : "border-b border"
         } absolute flex-center top-0 z-30 py-1 w-full body-font`}
       >
         <nav className="container w-full justify-between mx-auto flex flex-wrap py-4 px-4 sm:py-4 sm:px-5 sm:flex-row flex-row items-center">
@@ -210,7 +218,7 @@ const Navbar = (props: Props) => {
           >
             <AiOutlineShoppingCart className="text-2xl cursor-pointer" />
             {showCartDropdown && (
-              <div className="absolute right-[-14rem] w-[464px] bg-white border rounded shadow-lg z-20">
+              <div className="absolute right-[-14rem] w-[464px] bg-background border rounded shadow-lg z-20">
                 <h3 className="text-lg font-semibold p-4 border-b">Keranjang</h3>
                 <ul className="p-4 flex flex-col gap-y-5">
                   {cartItems.length > 0 ? (
@@ -219,7 +227,7 @@ const Navbar = (props: Props) => {
                         <div className="flex">
                           <img src={item.product_img} alt={item.name} className="w-[56px] h-[56px]"/>
                         </div>
-                        <span className="truncate w-[250px]">{item.name}</span>
+                        <span className="truncate w-[250px] text-sm">{item.name}</span>
                         <span>Rp{item.price}</span>
                       </li>
                     ))
@@ -298,7 +306,7 @@ const Navbar = (props: Props) => {
                     <input
                       type="text"
                       id="username"
-                      className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
+                      className="w-full autofill:bg-background focus:bg-background bg-background text-slate-800 dark:text-slate-200 border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                       placeholder="Username or Email"
                       value={formData.username}
                       onChange={handleChange}
@@ -306,7 +314,7 @@ const Navbar = (props: Props) => {
                     <div className="relative">
                       <input
                         id="password"
-                        className="w-full border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
+                        className="w-full bg-background text-slate-800 dark:text-slate-200 border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                         placeholder="Password"
                         type={showPwlogin ? 'text' : 'password'}
                         value={formData.password}
@@ -329,8 +337,8 @@ const Navbar = (props: Props) => {
                       form="login-form"
                       className={`text-center w-full ${
                         formFilled
-                          ? "bg-sky-600"
-                          : "bg-zinc-200 cursor-not-allowed"
+                          ? "bg-sky-600 text-white"
+                          : "bg-slate-400 text-white cursor-not-allowed"
                       } border-0 py-3 px-4 focus:outline-none rounded text-base ${
                         formFilled ? "" : "pointer-events-none"
                       }`}

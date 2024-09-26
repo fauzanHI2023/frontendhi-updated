@@ -11,7 +11,7 @@ const page = () => {
           {summaryDashboard.map((countSummary, index) => (
             <div key={index} className="flex flex-row gap-x-4 dark:bg-slate-900 bg-white rounded-xl py-4 px-6">
               <div className="flex flex-col gap-y-4 justify-between w-[65%]">
-                <div className="text-sm font-semibold text-slate-900">{countSummary.label}</div>
+                <div className="text-sm font-semibold text-slate-900 dark:text-white">{countSummary.label}</div>
                 <div className="text-lg text-nowrap font-semibold text-slate-500">{countSummary.angka}</div>
               </div>
               <div className="mb-2 w-[35%]"><span className="w-full">{countSummary.icon}</span></div>

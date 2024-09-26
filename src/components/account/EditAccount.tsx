@@ -117,7 +117,7 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
             type="text"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-background border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="mb-4">
@@ -128,7 +128,7 @@ const EditAccount: React.FC<Props> = ({ setisEditAkun }) => {
             type="text"
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-background border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="flex flex-row justify-end">

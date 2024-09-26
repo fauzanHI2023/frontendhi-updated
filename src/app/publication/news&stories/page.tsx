@@ -1,10 +1,18 @@
+"use client"
 import React from 'react'
+import BannerPublikasi from '@/components/ui/banner/BannerPublikasi';
 
 const NewsStories: React.FC = () => {
+  const homePageImages = [
+    "/newsstories (1).png",
+    "/newsstories (2).png",
+    "/newsstories (3).png",
+    "/newsstories (4).png",
+  ]; // Daftar gambar untuk halaman beranda
+
   return (
-    <main className="relative top-0 flex min-h-screen flex-col items-center justify-center p-24 bg-hi-dark font-poppins">
-        <section className="container w-10/12">
-        </section>
+    <main className="flex flex-col items-center justify-center sm:pt-28 pt-12 px-6">
+        <BannerPublikasi images={homePageImages} title='News & Stories'/>
     </main>
   )
 }
