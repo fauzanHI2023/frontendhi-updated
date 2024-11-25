@@ -21,7 +21,7 @@ const Footer = () => {
   const isPageRegister = pathname === "/register";
   return (
     <footer
-      className={`flex flex-col gap-y-16 mx-auto w-full max-w-8xl px-6 py-12 xs:px-8 sm:px-24 sm:py-24 sm:pb-16 bg-sky-950 dark:bg-slate-800 ${
+      className={`flex flex-col gap-y-16 mx-auto w-full max-w-8xl px-6 py-12 xs:px-8 sm:px-24 sm:py-24 sm:pb-16 bg-gradient-to-r from-sky-500 to-blue-950 dark:bg-slate-800 ${
         isPageLogin ? "hidden" : "flex"
       } ${isPageRegister ? "hidden" : "flex"}`}
       style={{boxShadow: '0px 0px 3px 0px rgba(148,148,148,1)'}}
@@ -29,7 +29,7 @@ const Footer = () => {
       <div className="flex flex-row justify-between items-start w-full">
         <div className="w-1/3 ">
           <Image
-            src="/LOGO HI-02 2.png"
+            src="/logo-footer-white.png"
             alt="Human Initiative"
             width={167}
             height={60}
@@ -87,25 +87,25 @@ const Footer = () => {
           </h6>
           <div className="flex flex-row">
             <span className={`px-1`}>
-              <FaWhatsapp />
+              <FaWhatsapp className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <FaInstagram />
+              <FaInstagram className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <AiOutlineYoutube />
+              <AiOutlineYoutube className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <FaTiktok />
+              <FaTiktok className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <FaLinkedinIn />
+              <FaLinkedinIn className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <FaXTwitter />
+              <FaXTwitter className="text-white"/>
             </span>
             <span className={`px-1`}>
-              <FaFacebookF />
+              <FaFacebookF className="text-white"/>
             </span>
           </div>
         </div>

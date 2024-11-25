@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const svgToDataUri = require("mini-svg-data-uri");
 const {
@@ -8,11 +8,11 @@ const {
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -24,9 +24,9 @@ const config = {
     },
     extend: {
       fontFamily: {
-        'poppins': ['Poppins'],
-        'raleway': ['Raleway'],
-        'nunito': ['Nunito'],
+        poppins: ["Poppins"],
+        raleway: ["Raleway"],
+        nunito: ["Nunito"],
       },
       backgroundImage: {
         "hero-pattern": "url('../../public/banner.png')",
@@ -34,7 +34,7 @@ const config = {
         "hero-donate-dark": "url('../../public/Wireframe - 4 (1).png')",
         "hero-donate-white": "url('../../public/Wireframe - 4.png')",
         "register": "url('../../public/bg-register.jpg')",
-        "logo-white": "url('../../public/logo HI White (1).png')",
+        "logo-white": "url('../../public/logo-footer-white.png')",
         "logo-blue": "url('../../public/logo (1) (2).png')",
         "hero-csr-dark": "url('../../public/bg-csr-black.png')",
         "hero-csr-white": "url('../../public/bg-csr-white-new.png')",
@@ -90,21 +90,45 @@ const config = {
           to: { height: "0" },
         },
         "infinite-blue-slice": {
-          '0%': {
-            transform: 'translateY(100px)',
+          "0%": {
+            transform: "translateY(100px)",
           },
-          '50%': {
-            transform: 'translateY(-250px)',
+          "50%": {
+            transform: "translateY(-250px)",
           },
-          '100%': {
-            transform: 'translateY(100px)',
+          "100%": {
+            transform: "translateY(100px)",
           },
+        },
+        shake: {
+          "10%, 90%": {
+            transform: "translate3d(-1px, 0, 0)",
+          },
+          "20%, 80%": {
+            transform: "translate3d(2px, 0, 0)",
+          },
+          "30%, 50%, 70%": {
+            transform: "translate3d(-4px, 0, 0)",
+          },
+          "40%, 60%": {
+            transform: "translate3d(4px, 0, 0)",
+          },
+        },
+        topdownmenu: {
+          "0%": {
+            height: "0",
+          },
+          "100%": {
+            height: "auto",
+          }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "infinite-blue-slice" : "infinite-blue-slice 6s infinite"
+        "infinite-blue-slice": "infinite-blue-slice 6s infinite",
+        "shake": "shake 0.82s cubic-bezier(.36, .07, .19, .97) both",
+        "menusub" : "topdownmenu",
       },
     },
   },
@@ -125,14 +149,14 @@ const config = {
       );
     },
   ],
-} satisfies Config
+} satisfies Config;
 
 function addVariableForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
   });
@@ -143,10 +167,10 @@ function addVariablesForColors({ addBase, theme }: any) {
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
   });
 }
 
-export default config
+export default config;

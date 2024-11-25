@@ -37,6 +37,22 @@ const Navbar = (props: Props) => {
   const [showMenu, setShowMenu] = useState(false);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -131,7 +147,7 @@ const Navbar = (props: Props) => {
     <>
       {" "}
       <header
-        className={`${isHome ? "sm:bg-transparent" : "border-b border"} bg-background ${
+        className={`${isHome ? "" : "border-b border"} bg-background ${
           isPageLogin ? "hidden" : "flex"
         } ${
           isPageRegister ? "hidden" : "flex"
@@ -139,7 +155,11 @@ const Navbar = (props: Props) => {
           isPageDonate ? "sm:bg-transparent" : "border-b border"
         } ${
           isPageCollaboration ? "sm:bg-transparent" : "border-b border"
-        } absolute flex-center top-0 z-30 py-1 w-full body-font`}
+        } ${
+          isScrolled
+            ? "bg-white/75 shadow transition duration-300"
+            : "bg-transparent"
+        } fixed flex-center top-0 z-30 py-1 w-full body-font`}
       >
         <nav className="container w-full justify-between mx-auto flex flex-wrap py-4 px-4 sm:py-4 sm:px-5 sm:flex-row flex-row items-center">
           <Link

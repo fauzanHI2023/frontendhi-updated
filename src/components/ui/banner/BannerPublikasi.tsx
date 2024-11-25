@@ -6,9 +6,10 @@ import Image from "next/image";
 interface BannerProps {
   images: string[];
   title: string; // Tambahkan prop untuk judul
+  hashtag: string;
 }
 
-const BannerPublikasi: React.FC<BannerProps> = ({ images, title }) => {
+const BannerPublikasi: React.FC<BannerProps> = ({ images, title, hashtag }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -45,8 +46,9 @@ const BannerPublikasi: React.FC<BannerProps> = ({ images, title }) => {
         )}
       </AnimatePresence>
       {/* Overlay dengan background hitam di sebelah kiri saja */}
-      <div className="absolute top-0 left-0 h-full w-[800px] bg-sky-900/[.85] backdrop-blur-xl flex items-center justify-start px-16">
-        <h1 className="text-white text-3xl md:text-5xl font-bold text-center px-4">{title}</h1>
+      <div className="absolute top-0 left-0 h-full w-[800px] bg-gradient-to-r from-sky-950 to-sky-800/[0] flex flex-col gap-y-6 items-start justify-center px-16">
+        <h1 className="text-white text-xl md:text-4xl font-bold px-4 break-all">{title}</h1>
+        <h1 className="text-white text-sm md:text-xl font-semibold px-4">{hashtag}</h1>
       </div>
     </section>
   );
