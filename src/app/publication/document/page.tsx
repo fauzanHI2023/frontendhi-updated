@@ -24,8 +24,9 @@ const Document = () => {
   const [documents, setDocuments] = useState<Document[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const itemsPerPage = 10;
-  const { currentPage, setCurrentPage, paginate, totalPages } =
-    usePagination(itemsPerPage);
+  const maxVisiblePages = 5;
+  const { currentPage, setCurrentPage, paginate, totalPages, getVisiblePageNumbers } =
+    usePagination(itemsPerPage, maxVisiblePages);
 
   useEffect(() => {
     const getDocuments = async () => {
@@ -153,7 +154,7 @@ const Document = () => {
           </button>
 
           <div className="page-numbers flex gap-2">
-            {generatePageNumbers().map((pageNumber) => (
+            {getVisiblePageNumbers(documents?.length || 0).map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => setCurrentPage(pageNumber)}

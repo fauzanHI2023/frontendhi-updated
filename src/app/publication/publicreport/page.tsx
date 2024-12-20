@@ -12,7 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs-fe";
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, SlidersHorizontal } from "lucide-react";
 import PdfViewer from "@/components/pdf/PdfViewer";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -24,6 +24,7 @@ interface PublicReport {
   link: string;
   created_at: string;
   type_report: string;
+  year_publicreport: string;
   coverUrl?: string;
   linkUrl?: string;
 }
@@ -34,10 +35,18 @@ const PublicReport = () => {
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTab, setSelectedTab] = useState<string>("all");
+  const [selectedYear, setSelectedYear] = useState<string>("All");
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
 
   const itemsPerPage = 10; // Number of items per page
-  const { currentPage, setCurrentPage, paginate, totalPages } =
-    usePagination(itemsPerPage);
+  const maxVisiblePages = 5;
+  const {
+    currentPage,
+    setCurrentPage,
+    paginate,
+    totalPages,
+    getVisiblePageNumbers,
+  } = usePagination(itemsPerPage, maxVisiblePages);
 
   useEffect(() => {
     const getPublicReports = async () => {
@@ -83,22 +92,28 @@ const PublicReport = () => {
     "/publicreport (4).png",
   ];
 
-  const filterReports = (type: string) => {
+  const filterReports = () => {
     if (!publicReports) return [];
-    if (type === "all") return publicReports;
-    return publicReports.filter((report) => report.type_report === type);
+    let filtered = publicReports;
+    if (selectedTab !== "all") {
+      filtered = filtered.filter(
+        (report) => report.type_report === selectedTab
+      );
+    }
+    if (selectedYear !== "All") {
+      filtered = filtered.filter(
+        (report) => report.year_publicreport === selectedYear
+      );
+    }
+    return filtered;
   };
 
-  const generatePageNumbers = () => {
-    const pages = [];
-    for (
-      let i = 1;
-      i <= totalPages(filterReports(selectedTab)?.length || 0);
-      i++
-    ) {
-      pages.push(i);
+  const generateYearOptions = () => {
+    const years = [];
+    for (let year = 2000; year <= 2024; year++) {
+      years.push(year.toString());
     }
-    return pages;
+    return years;
   };
 
   return (
@@ -108,7 +123,7 @@ const PublicReport = () => {
         title="Public Report of Human Initiative"
         hashtag="Berdaya, Kolaborasi, Amanah"
       />
-      <section className="relative w-full flex flex-col gap-y-8 sm:px- px-6 sm:py-12 py-10">
+      <section className="relative w-full flex flex-col gap-y-8 sm:px-12 px-6 sm:py-12 py-10">
         <Tabs
           defaultValue="all"
           className="w-full"
@@ -124,6 +139,57 @@ const PublicReport = () => {
             <TabsTrigger value="factsheet">Fact Sheet</TabsTrigger>
           </TabsList>
 
+          <div className="mb-4 flex flex-row justify-center items-center gap-x-4 relative bottom-4 float-right">
+            {/* Tombol "Year" */}
+            <button
+              onClick={() => setShowYearDropdown(!showYearDropdown)}
+              className="flex flex-row justify-between px-6 py-2 rounded-3xl bg-sky-500 text-white z-20 hover:transition-all hover:duration-200 hover:bg-sky-600"
+            >
+              Year <SlidersHorizontal className="pl-2 w-12 text-white text-lg" />
+            </button>
+
+            {/* Dropdown */}
+            {showYearDropdown && (
+              <>
+                <div
+                  onClick={() => setShowYearDropdown(false)}
+                  className="fixed inset-0 bg-black bg-opacity-50 z-10 top-0 left-0 transition-opacity duration-200 ease-in w-full h-full"
+                />
+
+                <div className="absolute top-full mt-8 right-0 bg-white border rounded-lg shadow-lg w-96 z-20">
+                  <h5 className="text-center py-4 bg-white text-sky-900 font-medium border border-b-4 border-b-sky-500">
+                    Select Year
+                  </h5>
+                  <ul className="flex flex-col h-32 overflow-hidden overflow-y-scroll">
+                    <li
+                      onClick={() => {
+                        setSelectedYear("All");
+                        setShowYearDropdown(false);
+                        setCurrentPage(1);
+                      }}
+                      className="px-4 py-2 text-sky-900 hover:bg-gray-100 cursor-pointer"
+                    >
+                      All
+                    </li>
+                    {generateYearOptions().map((year) => (
+                      <li
+                        key={year}
+                        onClick={() => {
+                          setSelectedYear(year);
+                          setShowYearDropdown(false);
+                          setCurrentPage(1);
+                        }}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        {year}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )}
+          </div>
+
           <TabsContent
             value={selectedTab}
             className="flex flex-col gap-y-8 justify-center items-center w-full"
@@ -131,8 +197,8 @@ const PublicReport = () => {
             <div className="sm:grid sm:grid-cols-2 sm:gap-10 w-full flex flex-col gap-y-6">
               {loading ? (
                 <p>Loading...</p>
-              ) : filterReports(selectedTab).length > 0 ? (
-                paginate(filterReports(selectedTab)).map((report) => (
+              ) : filterReports().length > 0 ? (
+                paginate(filterReports()).map((report) => (
                   <div
                     key={report.id}
                     className="publikasi-card mb-4 border-b pb-4 w-full flex flex-row gap-x-3 justify-between bg-gray-50 transition duration-500 ease-in hover:bg-gray-100"
@@ -195,19 +261,21 @@ const PublicReport = () => {
               </button>
 
               <div className="page-numbers flex gap-2">
-                {generatePageNumbers().map((pageNumber) => (
-                  <button
-                    key={pageNumber}
-                    onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-4 py-2 border rounded ${
-                      currentPage === pageNumber
-                        ? "bg-sky-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                  >
-                    {pageNumber}
-                  </button>
-                ))}
+                {getVisiblePageNumbers(filterReports().length).map(
+                  (pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      onClick={() => setCurrentPage(pageNumber)}
+                      className={`px-4 py-2 border rounded ${
+                        currentPage === pageNumber
+                          ? "bg-sky-500 text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  )
+                )}
               </div>
 
               <button
@@ -215,14 +283,11 @@ const PublicReport = () => {
                   setCurrentPage(
                     Math.min(
                       currentPage + 1,
-                      totalPages(filterReports(selectedTab)?.length || 0)
+                      totalPages(filterReports().length)
                     )
                   )
                 }
-                disabled={
-                  currentPage ===
-                  totalPages(filterReports(selectedTab)?.length || 0)
-                }
+                disabled={currentPage === totalPages(filterReports().length)}
                 className="px-4 py-3 bg-sky-500 text-white rounded disabled:bg-gray-300"
               >
                 <FaArrowRight />

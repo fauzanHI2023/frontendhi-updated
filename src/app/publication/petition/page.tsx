@@ -21,8 +21,9 @@ const Petition = () => {
   const [petitions, setPetitions] = useState<Petition[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const itemsPerPage = 9;
-  const { currentPage, setCurrentPage, paginate, totalPages } =
-    usePagination(itemsPerPage);
+  const maxVisiblePages = 5;
+  const { currentPage, setCurrentPage, paginate, totalPages, getVisiblePageNumbers } =
+    usePagination(itemsPerPage, maxVisiblePages);
 
   useEffect(() => {
     const getPetitions = async () => {
@@ -120,7 +121,7 @@ const Petition = () => {
           </button>
 
           <div className="page-numbers flex gap-2">
-            {generatePageNumbers().map((pageNumber) => (
+            {getVisiblePageNumbers(petitions?.length || 0).map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => setCurrentPage(pageNumber)}

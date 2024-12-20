@@ -124,7 +124,7 @@ const LocationAutocomplete: React.FC<Props> = ({ onLastSelectedChange }) => {
       <Combobox value={selectedProvince} onChange={handleProvinceChange}>
         <div className="relative">
           <ComboboxInput
-            className="border rounded px-4 py-2 w-full"
+            className="text-gray-700 dark:text-gray-300 border rounded px-4 py-2 w-full bg-background text-background border border-gray-300 dark:border-slate-600 focus:outline-none focus:border-sky-600 dark:focus:border-sky-500"
             placeholder="Cari Provinsi..."
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(province: Location) => province?.location_name || ''}

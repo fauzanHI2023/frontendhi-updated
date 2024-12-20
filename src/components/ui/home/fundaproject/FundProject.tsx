@@ -21,11 +21,11 @@ const FundProject = () => {
     >
       <div className="flex flex-row justify-between items-end">
         <div className="flex flex-col gap-y-4">
-          <h5 className={`text-slate-700 dark:text-white font-semibold text-[36px]`}>Introduce Our Campaign</h5>
-          <p className={`text-slate-500 dark:text-slate-500 font-medium text-sm`}>How do something great to help others</p>
+          <h5 className={`text-slate-700 dark:text-white font-semibold text-[36px]`}>Every Donation Brings New Hope</h5>
+          <p className={`text-slate-500 dark:text-slate-500 font-medium text-sm`}>Let’s Make It Happen Together!</p>
         </div>
         <a href="#" className="text-sky-600 dark:text-sky-600 font-bold text-lg">
-          Lihat Project Lainnya
+          See other Campaign​
         </a>
       </div>
       <div className="flex flex-row gap-x-8">

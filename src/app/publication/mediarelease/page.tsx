@@ -20,7 +20,9 @@ const MediaReleasePage = () => {
   const [mediaReleases, setMediaReleases] = useState<MediaRelease[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const itemsPerPage = 9;
-  const { currentPage, setCurrentPage, paginate, totalPages } = usePagination(itemsPerPage);
+  const maxVisiblePages = 5;
+  const { currentPage, setCurrentPage, paginate, totalPages, getVisiblePageNumbers } =
+    usePagination(itemsPerPage, maxVisiblePages);
 
   useEffect(() => {
     const getMediaReleases = async () => {
@@ -95,7 +97,7 @@ const MediaReleasePage = () => {
           </button>
 
           <div className="page-numbers flex gap-2">
-            {generatePageNumbers().map((pageNumber) => (
+            {getVisiblePageNumbers(mediaReleases?.length || 0).map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => setCurrentPage(pageNumber)}
@@ -112,7 +114,9 @@ const MediaReleasePage = () => {
 
           <button
             onClick={() =>
-              setCurrentPage(Math.min(currentPage + 1, totalPages(mediaReleases?.length || 0)))
+              setCurrentPage(
+                Math.min(currentPage + 1, totalPages(mediaReleases?.length || 0))
+              )
             }
             disabled={currentPage === totalPages(mediaReleases?.length || 0)}
             className="px-4 py-2 bg-sky-500 text-white rounded disabled:bg-gray-300"

@@ -35,6 +35,7 @@ const Page = (props: Props) => {
     email?: string | null | undefined;
     image?: string | null | undefined;
     register_date?: string | null | undefined;
+    full_name?: string | null | undefined;
     phpDonorData?: any[];
     userType?: string | null | undefined;
     location?: {

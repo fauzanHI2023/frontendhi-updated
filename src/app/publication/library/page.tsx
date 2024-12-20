@@ -30,10 +30,10 @@ const Library = () => {
   const [librarys, setLibrarys] = useState<Library[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTab, setSelectedTab] = useState<string>("all");
-
   const itemsPerPage = 10;
-  const { currentPage, setCurrentPage, paginate, totalPages } =
-    usePagination(itemsPerPage);
+  const maxVisiblePages = 5;
+  const { currentPage, setCurrentPage, paginate, totalPages, getVisiblePageNumbers } =
+    usePagination(itemsPerPage, maxVisiblePages);
 
   useEffect(() => {
     const getLibrary = async () => {
@@ -182,48 +182,42 @@ const Library = () => {
 
             {/* Pagination Controls */}
             <div className="pagination-controls flex justify-center items-center gap-4 mt-8">
-              <button
-                onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-3 bg-sky-500 text-white rounded disabled:bg-gray-300"
-              >
-                <FaArrowLeft />
-              </button>
+          <button
+            onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-sky-500 text-white rounded disabled:bg-gray-300"
+          >
+            <FaArrowLeft />
+          </button>
 
-              <div className="page-numbers flex gap-2">
-                {generatePageNumbers().map((pageNumber) => (
-                  <button
-                    key={pageNumber}
-                    onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-4 py-2 border rounded ${
-                      currentPage === pageNumber
-                        ? "bg-sky-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                  >
-                    {pageNumber}
-                  </button>
-                ))}
-              </div>
-
+          <div className="page-numbers flex gap-2">
+            {getVisiblePageNumbers(librarys?.length || 0).map((pageNumber) => (
               <button
-                onClick={() =>
-                  setCurrentPage(
-                    Math.min(
-                      currentPage + 1,
-                      totalPages(filterReports(selectedTab)?.length || 0)
-                    )
-                  )
-                }
-                disabled={
-                  currentPage ===
-                  totalPages(filterReports(selectedTab)?.length || 0)
-                }
-                className="px-4 py-3 bg-sky-500 text-white rounded disabled:bg-gray-300"
+                key={pageNumber}
+                onClick={() => setCurrentPage(pageNumber)}
+                className={`px-4 py-2 border rounded ${
+                  currentPage === pageNumber
+                    ? "bg-sky-500 text-white"
+                    : "bg-gray-200 text-black"
+                }`}
               >
-                <FaArrowRight />
+                {pageNumber}
               </button>
-            </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() =>
+              setCurrentPage(
+                Math.min(currentPage + 1, totalPages(librarys?.length || 0))
+              )
+            }
+            disabled={currentPage === totalPages(librarys?.length || 0)}
+            className="px-4 py-2 bg-sky-500 text-white rounded disabled:bg-gray-300"
+          >
+            <FaArrowRight />
+          </button>
+        </div>
           </TabsContent>
         </Tabs>
       </section>

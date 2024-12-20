@@ -11,9 +11,10 @@ import { FcGoogle } from "react-icons/fc";
 import { MdKeyboardArrowDown, MdMenu, MdClose } from "react-icons/md";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun, BookUser } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button";
+import { LogIn } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -138,6 +139,8 @@ const Navbar = (props: Props) => {
 
   const isPageCollaboration = pathname === "/takeaction/collaborationimpact";
 
+  const isPageDetailsCareer =  /^\/joinourmovement\/behumanitarianworker\/[^/]+$/.test(pathname || "");
+
   useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
     setCartItems(cartItems);
@@ -147,17 +150,17 @@ const Navbar = (props: Props) => {
     <>
       {" "}
       <header
-        className={`${isHome ? "" : "border-b border"} bg-background ${
+        className={`text-slate-700 dark:text-white ${isHome ? "" : ""} bg-background ${
           isPageLogin ? "hidden" : "flex"
         } ${
           isPageRegister ? "hidden" : "flex"
         } ${
-          isPageDonate ? "sm:bg-transparent" : "border-b border"
+          isPageDonate ? "sm:bg-transparent" : ""
         } ${
-          isPageCollaboration ? "sm:bg-transparent" : "border-b border"
+          isPageDetailsCareer ? "sm:bg-transparent text-white" : ""
         } ${
           isScrolled
-            ? "bg-white/75 shadow transition duration-300"
+            ? "text-slate-700 dark:text-white bg-white/75 dark:bg-sky-950/75 shadow transition duration-300"
             : "bg-transparent"
         } fixed flex-center top-0 z-30 py-1 w-full body-font`}
       >
@@ -214,7 +217,7 @@ const Navbar = (props: Props) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Sun className="h-[1.2rem] text-slate-700 dark:text-white w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                   <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                   <span className="sr-only">Toggle theme</span>
                 </Button>
@@ -280,18 +283,19 @@ const Navbar = (props: Props) => {
                   <ButtonLogout />
                 </Fragment>
               ) : (
-                <div className="flex flex-row">
+                <div className="flex flex-row justify-center items-center">
                   <button
                     onClick={() => setShowModal(true)}
-                    className="h-full inline-flex items-center bg-white border-0 py-2 px-4 focus:outline-none rounded text-sm text-stone-700 mt-0 sm:mt-0 mr-2"
+                    className="h-full font-semibold inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded-xl text-sm text-white mt-0 sm:mt-0 mr-2"
                   >
-                    Login
+                    Log In <LogIn className="pl-2 w-8"/>
                   </button>
+                  <p>|</p>
                   <Link
                     href="/register"
-                    className="h-full inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded text-sm text-white mt-0 sm:mt-0"
+                    className="h-full inline-flex items-center  border-0 py-2 px-2 focus:outline-none rounded text-sm text-slate-600 dark:text-white mt-0 sm:mt-0"
                   >
-                    Register
+                    <BookUser/>
                   </Link>
                 </div>
               )}
@@ -369,7 +373,7 @@ const Navbar = (props: Props) => {
                     </button>
                     <div className="flex flex-row text-center my-4">
                       <p className="text-stone-400 text-base">
-                        Don&apos;t have an account yet?
+                        Don&apos;t have an account yet? {" "}
                       </p>
                       <Link
                         href="/register"

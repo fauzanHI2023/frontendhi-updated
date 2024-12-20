@@ -11,7 +11,7 @@ const Gallery = () => {
   ]; // Daftar gambar untuk halaman beranda
   return (
     <main className="flex flex-col items-center justify-center sm:pt-28 pt-12 px-6">
-        <BannerPublikasi images={homePageImages} title='Gallery'/>
+        <BannerPublikasi images={homePageImages} title='Gallery of Human Initiative' hashtag='Berdaya, Kolaborasi, Amanah'/>
     </main>
   )
 }

@@ -21,10 +21,10 @@ const Footer = () => {
   const isPageRegister = pathname === "/register";
   return (
     <footer
-      className={`flex flex-col gap-y-16 mx-auto w-full max-w-8xl px-6 py-12 xs:px-8 sm:px-24 sm:py-24 sm:pb-16 bg-gradient-to-r from-sky-500 to-blue-950 dark:bg-slate-800 ${
+      className={`flex flex-col gap-y-16 mx-auto w-full max-w-8xl px-6 py-12 xs:px-8 sm:px-24 sm:py-24 sm:pb-16 bg-gradient-to-r from-sky-600 to-blue-950 dark:from-sky-700 ${
         isPageLogin ? "hidden" : "flex"
       } ${isPageRegister ? "hidden" : "flex"}`}
-      style={{boxShadow: '0px 0px 3px 0px rgba(148,148,148,1)'}}
+      style={{ boxShadow: "0px 0px 3px 0px rgba(148,148,148,1)" }}
     >
       <div className="flex flex-row justify-between items-start w-full">
         <div className="w-1/3 ">
@@ -73,12 +73,12 @@ const Footer = () => {
       <div className="flex flex-col gap-y-4">
         <div>
           <p className="text-white dark:text-white text-sm font-normal italic">
-            &quot;Human Initiative berkomitmen menerapkan Sistem Manajemen Anti
-            Penyuapan sehingga tidak membolehkan segala bentuk penyuapan dan
-            gratifikasi, serta tidak akan mendukung atau menyediakan
-            dana/material untuk individu maupun organisasi yang dikenal
-            menganjurkan, mendukung, atau terlibat dalam aktivitas melanggar
-            hukum, kekerasan, pencucian uang ataupun terorisme.&quot;
+            &quot;Human Initiative is committed to implementing an Anti-Bribery
+            Management System that does not allow all forms of bribery and
+            gratuities, and will not support or provide funds/materials to
+            individuals or organizations known to advocate, support, or engage
+            in illegal activities, violence, money laundering or
+            terrorism.​&quot;
           </p>
         </div>
         <div className="flex flex-row justify-between border-t border-slate-400 dark:border-white pt-4">
@@ -87,25 +87,25 @@ const Footer = () => {
           </h6>
           <div className="flex flex-row">
             <span className={`px-1`}>
-              <FaWhatsapp className="text-white"/>
+              <FaWhatsapp className="text-white" />
             </span>
             <span className={`px-1`}>
-              <FaInstagram className="text-white"/>
+              <FaInstagram className="text-white" />
             </span>
             <span className={`px-1`}>
-              <AiOutlineYoutube className="text-white"/>
+              <AiOutlineYoutube className="text-white" />
             </span>
             <span className={`px-1`}>
-              <FaTiktok className="text-white"/>
+              <FaTiktok className="text-white" />
             </span>
             <span className={`px-1`}>
-              <FaLinkedinIn className="text-white"/>
+              <FaLinkedinIn className="text-white" />
             </span>
             <span className={`px-1`}>
-              <FaXTwitter className="text-white"/>
+              <FaXTwitter className="text-white" />
             </span>
             <span className={`px-1`}>
-              <FaFacebookF className="text-white"/>
+              <FaFacebookF className="text-white" />
             </span>
           </div>
         </div>

@@ -159,8 +159,8 @@ const BannerHome: React.FC = () => {
           data-aos="fade-left"
         >
           <h3 className="font-bold sm:text-5xl text-2xl sm:pb-10 pb-3">
-            Helps <span className="font-black text-sky-600">connect</span>{" "}
-            those who care with those who need help.
+            Helps <span className="font-black text-sky-600">connect</span> those
+            who care with those who need help.
           </h3>
           <h6 className="font-normal text-sm font-base">
             Lets work together to help our brothers and sisters who are being
@@ -173,17 +173,21 @@ const BannerHome: React.FC = () => {
         >
           <TabGroup className="w-2/3">
             <TabList className="w-full mb-4">
-              <Tab className="transition duration-150 ease-in w-2/4 rounded-tl-[23px] rounded-bl-[23px] py-3 text-center dark:bg-white bg-sky-600 dark:data-[selected]:bg-sky-950 data-[selected]:bg-white dark:text-blue-900 text-white dark:data-[selected]:text-white data-[selected]:text-blue-900">
-                Donasi Sekali
+              <Tab className="transition duration-150 ease-in w-2/4 rounded-tl-[23px] rounded-bl-[23px] py-3 text-center dark:bg-white bg-white dark:data-[selected]:bg-sky-950 data-[selected]:bg-sky-600 dark:text-blue-900 text-sky-600 dark:data-[selected]:text-white data-[selected]:text-white">
+                One Time Donation
               </Tab>
-              <Tab className="transition duration-150 ease-in w-2/4 rounded-tr-[23px] rounded-br-[23px] py-3 text-center dark:bg-white bg-sky-600 dark:data-[selected]:bg-sky-950 data-[selected]:bg-white dark:text-blue-900 text-white dark:data-[selected]:text-white data-[selected]:text-blue-900">
-                Donasi Perbulan
+              <Tab className="transition duration-150 ease-in w-2/4 rounded-tr-[23px] rounded-br-[23px] py-3 text-center dark:bg-white bg-white dark:data-[selected]:bg-sky-950 data-[selected]:bg-sky-600 dark:text-blue-900 text-sky-600 dark:data-[selected]:text-white data-[selected]:text-white">
+                Monthly Donation
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel className="flex flex-col text-sm transition duration-300 ease-in" data-aos="fade-left" data-aos-duration="500">
+              <TabPanel
+                className="flex flex-col text-sm transition duration-300 ease-in"
+                data-aos="fade-left"
+                data-aos-duration="500"
+              >
                 <div className="dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-4 text-center rounded-tl-[23px] rounded-tr-[23px]">
-                  <h4>Pilih jumlah yang akan diberikan per bulan</h4>
+                  <h4>Choose Your Donation Amount</h4>
                 </div>
                 <form className="flex flex-wrap dark:bg-white bg-white p-4">
                   List Produk disini
@@ -196,45 +200,53 @@ const BannerHome: React.FC = () => {
                 </form>
                 <div className="flex flex-col dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-8 text-center rounded-bl-[23px] rounded-br-[23px]">
                   <h4>
-                    Donasi yang anda berikan digunakan untuk menjalankan program program yang telah disiapkan oleh Human Initiative.
-                    Apabila anda ingin berdonasi program tertentu silakan klik <a href="">disini</a>
+                    The donations you make are used to run the programs that
+                    have been prepared by the Human Initiative. If you want to
+                    donate to a specific program please click {" "}
+                    <a href="" className="font-extrabold">here​</a>
                   </h4>
                 </div>
               </TabPanel>
-              <TabPanel className="flex flex-col text-sm transition duration-150 ease-in" data-aos="fade-left" data-aos-duration="500">
+              <TabPanel
+                className="flex flex-col text-sm transition duration-150 ease-in"
+                data-aos="fade-left"
+                data-aos-duration="500"
+              >
                 <div className="dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-4 text-center rounded-tl-[23px] rounded-tr-[23px]">
-                  <h4>Pilih jumlah yang akan diberikan sekali</h4>
+                  <h4>Choose your Monthly Donation Amount​</h4>
                 </div>
                 <form
-                  className="flex flex-wrap gap-x-3 dark:bg-white bg-white p-4"
+                  className="flex flex-col gap-x-3 dark:bg-white bg-white p-4"
                   onSubmit={handleDonateNow}
                 >
-                  {loading ? (
-                    <p>Loading products...</p>
-                  ) : products.length > 0 ? (
-                    products.map((product) => (
-                      <div key={product.product_id} className="w-1/4 mb-4">
-                        <input
-                          type="radio"
-                          name="product"
-                          id={product.product_id}
-                          value={product.product_id}
-                          onChange={() =>
-                            setSelectedProductId(product.product_id)
-                          }
-                          className="peer hidden"
-                        />
-                        <label
-                          htmlFor={product.product_id}
-                          className="flex flex-col items-center w-full cursor-pointer p-2 text-center rounded-3xl bg-slate-300 text-slate-600 peer-checked:bg-sky-600 peer-checked:text-white"
-                        >
-                          {formatPrice(product.price)}
-                        </label>
-                      </div>
-                    ))
-                  ) : (
-                    <p>No products available</p>
-                  )}
+                  <div className="grid grid-cols-3 gap-4">
+                    {loading ? (
+                      <p>Loading products...</p>
+                    ) : products.length > 0 ? (
+                      products.map((product) => (
+                        <div key={product.product_id} className="w-full mb-4">
+                          <input
+                            type="radio"
+                            name="product"
+                            id={product.product_id}
+                            value={product.product_id}
+                            onChange={() =>
+                              setSelectedProductId(product.product_id)
+                            }
+                            className="peer hidden"
+                          />
+                          <label
+                            htmlFor={product.product_id}
+                            className="flex flex-col items-center w-full cursor-pointer p-2 text-center rounded-3xl bg-slate-300 text-slate-600 peer-checked:bg-sky-600 peer-checked:text-white"
+                          >
+                            {formatPrice(product.price)}
+                          </label>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No products available</p>
+                    )}
+                  </div>
                   <button
                     type="submit"
                     className="dark:text-white text-white w-full dark:bg-sky-950 bg-sky-600 rounded-[50px] py-3 px-4 text-center"
@@ -244,8 +256,10 @@ const BannerHome: React.FC = () => {
                 </form>
                 <div className="flex flex-col dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-8 text-center rounded-bl-[23px] rounded-br-[23px]">
                   <h4>
-                    Donasi yang anda berikan digunakan untuk menjalankan program program yang telah disiapkan oleh Human Initiative.
-                    Apabila anda ingin berdonasi program tertentu silakan klik <a href="">disini</a>
+                  The donations you make are used to run the programs that
+                    have been prepared by the Human Initiative. If you want to
+                    donate to a specific program please click {" "}
+                    <a href="" className="font-extrabold">here​</a>
                   </h4>
                 </div>
               </TabPanel>

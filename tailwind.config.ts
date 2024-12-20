@@ -29,6 +29,7 @@ const config = {
         nunito: ["Nunito"],
       },
       backgroundImage: {
+        "hero-career-details": "url('../../public/career-details.png')",
         "hero-pattern": "url('../../public/banner.png')",
         "hero-white": "url('../../public/banner-white.png')",
         "hero-donate-dark": "url('../../public/Wireframe - 4 (1).png')",

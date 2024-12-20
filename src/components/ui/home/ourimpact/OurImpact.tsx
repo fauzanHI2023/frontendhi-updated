@@ -27,6 +27,7 @@ const OurImpact: React.FC = () => {
       case "792": // ID untuk Turki
       case "682": // ID untuk Arab Saudi
       case "276": // ID untuk Jerman
+      case "392": // ID untuk Jepang
         return "rgb(56 189 248)"; // Biru
       default:
         return "rgb(100 116 139)"; // Abu-abu
@@ -75,6 +76,11 @@ const OurImpact: React.FC = () => {
           name: "Human Initaitive Germany",
           url: "",
         };
+      case "392":
+        return {
+          name: "Human Initiative Japan",
+          url: "",
+        };
       default:
         return {
           name: "",
@@ -110,7 +116,7 @@ const OurImpact: React.FC = () => {
             <span className="text-sky-500">Human Initiative</span> impact
           </h5>
           <p className="text-slate-600 dark:text-slate-300 font-base text-sm sm:w-1/2 w-full pr-6" data-aos="fade-right" data-aos-easing="linear" data-aos-duration="1000">
-            Human Initiative is a non-profit organization that works to improve the lives of underprivileged children throughout the world. We provide children, disaster, empowerment, and infrastructure.
+          Through innovative humanitarian programs, we have become a beacon of hope for millions of lives, turning crisis into opportunity and building a better future for communities around the world.​
           </p>
         </div>
         <div className="flex flex-row justify-start items-center gap-x-4 py-6">
@@ -127,19 +133,19 @@ const OurImpact: React.FC = () => {
         <div className="flex flex-row">
           <div className="w-1/4 flex flex-col gap-x-4">
             <h5 className="text-sky-500 font-bold text-3xl">3.783.423</h5>
-            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Penerima Manfaat</h6>
+            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Rightholders</h6>
           </div>
           <div className="w-1/4 flex flex-col gap-x-4">
             <h5 className="text-sky-500 font-bold text-3xl">3200</h5>
-            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Relawan</h6>
+            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Volunteer</h6>
           </div>
           <div className="w-1/4 flex flex-col gap-x-4">
             <h5 className="text-sky-500 font-bold text-3xl">100+</h5>
-            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Program Kebaikan</h6>
+            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Programs</h6>
           </div>
           <div className="w-1/4 flex flex-col gap-x-4">
             <h5 className="text-sky-500 font-semibold text-3xl">Rp. 113.969.507.912</h5>
-            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Donasi Tersalurkan</h6>
+            <h6 className="dark:text-white text-slate-800 font-semibold text-base">Donations Distributed</h6>
           </div>
         </div>
         <div className="relative flex justify-center">

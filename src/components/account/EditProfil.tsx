@@ -206,7 +206,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="text"
                 value={newBirthPlace}
                 onChange={(e) => setNewBirthPlace(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
             <div className="mb-4">
@@ -217,7 +217,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="date"
                 value={newBirthDate}
                 onChange={(e) => setNewBirthDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
             <div className="mb-4">
@@ -231,7 +231,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 id="gender"
                 value={newGender}
                 onChange={(e) => setNewGender(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               >
                 <option value="">Pilih Jenis Kelamin</option>
                 <option value="1">Pria</option>
@@ -246,7 +246,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="text"
                 value={newBloodType}
                 onChange={(e) => setNewBloodType(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
             <div className="mb-4">
@@ -257,7 +257,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 id="religi"
                 value={newReligi}
                 onChange={(e) => setNewReligi(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               >
                 <option value="">Pilih Agama</option>
                 <option value="islam">Islam</option>
@@ -277,7 +277,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="text"
                 value={newAddress}
                 onChange={(e) => setNewAddress(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
             <div className="mb-4">
@@ -296,7 +296,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="text"
                 value={newPhone}
                 onChange={(e) => setNewPhone(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
           </>
@@ -325,7 +325,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
                 type="text"
                 value={newAddress}
                 onChange={(e) => setNewAddress(e.target.value)}
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
               />
             </div>
             <div className="mb-4">
@@ -346,7 +346,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             type="text"
             value={newInstagram}
             onChange={(e) => setNewInstagram(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
           />
         </div>
         <div className="mb-4">
@@ -357,7 +357,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             type="text"
             value={newLinkedin}
             onChange={(e) => setNewLinkedin(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
           />
         </div>
         <div className="mb-4">
@@ -368,7 +368,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             type="text"
             value={newFacebook}
             onChange={(e) => setNewFacebook(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
           />
         </div>
         <div className="mb-4">
@@ -379,7 +379,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             type="text"
             value={newYoutube}
             onChange={(e) => setNewYoutube(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
           />
         </div>
         <div className="mb-4">
@@ -390,7 +390,7 @@ const EditProfil: React.FC<Props> = ({ setisEditProfil, userType }) => {
             type="text"
             value={newWebsite}
             onChange={(e) => setNewWebsite(e.target.value)}
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500 dark:focus:border-sky-500 bg-background"
           />
         </div>
         <div className="flex flex-row justify-end">

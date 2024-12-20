@@ -2,6 +2,7 @@
     user_name: string;
     full_name: string;
     email: string;
+    phone_no: string;
     passwd: string;
   }
   
@@ -66,14 +67,14 @@
     }
   }
 
-  export async function checkUsernameEmail(username: string, email: string): Promise<{ usernameExists: boolean, emailExists: boolean }> {
+  export async function checkUsernameEmail(username: string, email: string, phone_no: string): Promise<{ usernameExists: boolean, emailExists: boolean, phoneExists: boolean }> {
     try {
       const response = await fetch(`https://adminx.human-initiative.org/register-personal/check-username-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_name: username, email }),
+        body: JSON.stringify({ user_name: username, email, phone_no: phone_no }),
       });
   
       if (!response.ok) {
@@ -84,6 +85,7 @@
       return {
         usernameExists: data.username_exists,
         emailExists: data.email_exists,
+        phoneExists: data.phone_exists,
       };
     } catch (error:any) {
       throw new Error(error.message || 'Failed to check username and email');

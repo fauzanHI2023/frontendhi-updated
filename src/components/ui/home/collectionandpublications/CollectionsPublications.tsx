@@ -1,8 +1,11 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { collectionPublic } from "@/data/data";
+import { fetchPublicReports } from "@/lib/publication/auth-public-report";
 import Image from "next/image";
+import Link from "next/link";
 import AOS from "aos";
+import axios from "axios";
 import "aos/dist/aos.css";
 import {
   Tabs,
@@ -11,17 +14,85 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs-fe";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import { Pagination, Autoplay, Navigation } from 'swiper/modules';
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination, Autoplay, Navigation } from "swiper/modules";
+import PdfViewervb from "@/components/pdf/pdfViewervb";
+import { ArrowDownToLine, SlidersHorizontal } from "lucide-react";
+
+interface PublicReport {
+  id: number;
+  title: string;
+  cover: string;
+  link: string;
+  created_at: string;
+  type_report: string;
+  year_publicreport: string;
+  coverUrl?: string;
+  linkUrl?: string;
+}
 
 const CollectionsPublications = () => {
+  const [publicReports, setPublicReports] = useState<PublicReport[] | null>(
+    null
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedTab, setSelectedTab] = useState<string>("all");
+
   useEffect(() => {
     AOS.init();
   }, []);
+
+  useEffect(() => {
+    const getPublicReports = async () => {
+      setLoading(true);
+      const data = await fetchPublicReports();
+      if (data && data.status === "200") {
+        const updatedReports = await Promise.all(
+          data.data.map(async (report: PublicReport) => {
+            try {
+              const coverResponse = await axios.get(
+                `/api/getImage?key=${report.cover}`
+              );
+              const linkResponse = await axios.get(
+                `/api/getFile?key=${report.link}`
+              );
+
+              return {
+                ...report,
+                coverUrl: coverResponse.data.url,
+                linkUrl: linkResponse.data.url,
+              };
+            } catch (error) {
+              console.error(
+                `Error fetching URLs for report ${report.id}:`,
+                error
+              );
+              return report;
+            }
+          })
+        );
+        setPublicReports(updatedReports);
+      }
+      setLoading(false);
+    };
+    getPublicReports();
+  }, []);
+
+  const filterReports = () => {
+    if (!publicReports) return [];
+    const sortedNews = [...publicReports].sort((a, b) => b.id - a.id);
+    let filtered = sortedNews.slice(0, 5);
+    if (selectedTab !== "all") {
+      filtered = filtered.filter(
+        (report) => report.type_report === selectedTab
+      );
+    }
+    return filtered;
+  };
 
   // Function to filter collection items by type
   const filterCollectionByType = (type: string) => {
@@ -31,301 +102,82 @@ const CollectionsPublications = () => {
   return (
     <section className={`p-24 bg flex flex-col w-full gap-y-12`}>
       <div className="flex flex-row justify-between">
-        <h5 className={`text-slate-600 dark:text-white font-bold text-2xl`}>
-          View Our Collections and Publications
+        <h5
+          className={`text-slate-600 dark:text-slate-400 dark:text-white font-bold text-2xl`}
+        >
+          Explore Knowledge and Inspiration: Discover Our Publications and
+          Collections!
         </h5>
-        <a
+        <Link
           href="#"
           className="text-sky-600 dark:text-sky-600 font-bold text-lg"
         >
-          Lihat Publikasi Lainnya
-        </a>
+          See More
+        </Link>
       </div>
       <div className="flex flex-row gap-x-6 w-full">
-        <Tabs defaultValue="annualreport" className="w-full">
-          <TabsList className="pb-6">
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="pb-10">
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="annualreport">Annual</TabsTrigger>
-            <TabsTrigger value="financialreport">Financial</TabsTrigger>
-            <TabsTrigger value="learningreport">Learning</TabsTrigger>
-            <TabsTrigger value="manualreport">Manual</TabsTrigger>
+            <TabsTrigger value="annual">Annual Report</TabsTrigger>
+            <TabsTrigger value="financial">Financial Report</TabsTrigger>
+            <TabsTrigger value="factsheet">Fact Sheet</TabsTrigger>
           </TabsList>
-
-          {/* Annual Report Tab */}
           <TabsContent
-            value="annualreport"
-            className="flex flex-col gap-y-8 justify-center items-start w-full"
+            value={selectedTab}
+            className="flex flex-col gap-y-8 justify-center items-center w-full"
           >
-            <h5 className="title-lg-medium">Annual Report</h5>
-            <div className="flex flex-row gap-x-4 w-full">
-              {filterCollectionByType("annual").map((collectionItem) => (
-                <div
-                  key={collectionItem.name}
-                  className="flex flex-col gap-y-4 w-[180px] basis-1/6  bg-slate-50 dark:bg-slate-900 justify-center items-center px-6 py-4 rounded-xl"
-                >
+            <div className="sm:grid sm:grid-cols-5 sm:gap-10 w-full flex flex-col gap-y-6">
+              {loading ? (
+                <p>Loading...</p>
+              ) : filterReports().length > 0 ? (
+                filterReports().map((report) => (
                   <div
-                    className="relative z-20 flex flex-col justify-center items-center pb-12"
-                    data-aos="fade-up-left"
-                    data-aos-duration="300"
+                    key={report.id}
+                    className="publikasi-card mb-4 border-b w-full flex flex-col gap-x-3 justify-between bg-gray-50 transition duration-500 ease-in hover:bg-gray-100"
                   >
-                    <Image
-                      height={250}
-                      width={180}
-                      src={collectionItem.image}
-                      alt={collectionItem.name}
-                      className="relative z-20 w-[120px] origin-bottom -rotate-12 left-6"
-                    />
-                    <div
-                      className="bg-slate-100 rounded-[170px] w-[170px] h-[170px] flex absolute z-10"
-                      style={{ top: "10%" }}
-                    />
-                  </div>
-                  <div
-                    className="flex flex-col gap-y-4 w-[180px]"
-                    data-aos="fade-left"
-                    data-aos-duration="500"
-                  >
-                    <h4 className="text-slate-700 font-semibold text-lg">
-                      {collectionItem.name}
-                    </h4>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-col justify-end items-start">
-                        <h5 className="text-slate-600 text-base font-base">
-                          {collectionItem.deskripsi}
-                        </h5>
+                    {report.coverUrl ? (
+                      <span className="w-[230px] h-[300px] overflow-hidden relative">
+                        <Image
+                          src={report.coverUrl}
+                          alt={report.title}
+                          width={500}
+                          height={500}
+                          className="w-full h-full object-cover float-none absolute origin-bottom -rotate-12 left-6"
+                        />
+                      </span>
+                    ) : (
+                      <p>No img image available.</p>
+                    )}
+                    <div className="flex flex-col justify-between items-start w-full px-6 py-2">
+                      <h2 className="capitalize text-base leading-6 font-medium text-slate-950 dark:text-white leading-6 h-[60px] overflow-hidden">
+                        {report.title}
+                      </h2>
+                      <div className="flex sm:flex-row flex-col gap-x-4">
+                        {report.linkUrl ? (
+                          <a
+                            href={report.linkUrl}
+                            target="_blank"
+                            className="hidden text-sky-500 hover:underline mt-2 flex flex-row justify-center items-center"
+                          >
+                            Download Report
+                            <ArrowDownToLine className="text-sky-600 hover:animate-shake" />
+                          </a>
+                        ) : (
+                          <p>No report file available.</p>
+                        )}
+                        {report.linkUrl ? (
+                          <PdfViewervb fileUrl={report.linkUrl} />
+                        ) : (
+                          <p>No report file available.</p>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent
-            value="all"
-            className="flex flex-col gap-y-8 justify-center items-start w-full"
-          >
-            <h5 className="title-lg-medium">Semua Report</h5>
-            <div className="flex flex-row gap-x-4 w-full">
-              <Swiper
-                slidesPerView={6}
-                spaceBetween={20}
-                autoplay={{
-                  delay: 4500,
-                }}
-                pagination={{
-                  clickable: true,
-                }}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 1,
-                    spaceBetween: 20,
-                  },
-                  768: {
-                    slidesPerView: 4,
-                    spaceBetween: 20,
-                  },
-                  1024: {
-                    slidesPerView: 6,
-                    spaceBetween: 20,
-                  },
-                }}
-                modules={[Pagination, Autoplay]}
-                className="mySwiper"
-              >
-              {collectionPublic.map((collectionItem) => (
-                <SwiperSlide
-                  key={collectionItem.name}
-                  className="flex flex-col gap-y-4 bg-slate-50 dark:bg-slate-900 justify-center items-center px-6 py-4 rounded-xl"
-                >
-                  <div
-                    className="relative z-20 flex flex-col justify-center items-center pb-12"
-                    data-aos="fade-up-left"
-                    data-aos-duration="300"
-                  >
-                    <Image
-                      height={250}
-                      width={180}
-                      src={collectionItem.image}
-                      alt={collectionItem.name}
-                      className="relative z-20 w-[120px] origin-bottom -rotate-12 left-6"
-                    />
-                    <div
-                      className="bg-slate-100 rounded-[170px] w-[170px] h-[170px] flex absolute z-10"
-                      style={{ top: "10%" }}
-                    />
-                  </div>
-                  <div
-                    className="flex flex-col gap-y-4 w-[180px]"
-                    data-aos="fade-left"
-                    data-aos-duration="500"
-                  >
-                    <h4 className="text-slate-700 font-semibold text-lg">
-                      {collectionItem.name}
-                    </h4>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-col justify-end items-start">
-                        <h5 className="text-slate-600 text-base font-base">
-                          {collectionItem.deskripsi}
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-              </Swiper>
-            </div>
-          </TabsContent>
-
-          {/* Financial Report Tab */}
-          <TabsContent
-            value="financialreport"
-            className="flex flex-col gap-y-8 justify-center items-start w-full"
-          >
-            <h5 className="title-lg-medium">Financial Report</h5>
-            <div className="flex flex-row gap-x-4 w-full">
-              {filterCollectionByType("financial").map((collectionItem) => (
-                <div
-                  key={collectionItem.name}
-                  className="flex flex-col gap-y-4 w-[180px] basis-1/6  bg-slate-50 dark:bg-slate-900 justify-center items-center px-6 py-4 rounded-xl"
-                >
-                  <div
-                    className="relative z-20 flex flex-col justify-center items-center pb-12"
-                    data-aos="fade-up-left"
-                    data-aos-duration="300"
-                  >
-                    <Image
-                      height={250}
-                      width={180}
-                      src={collectionItem.image}
-                      alt={collectionItem.name}
-                      className="relative z-20 w-[120px] origin-bottom -rotate-12 left-6"
-                    />
-                    <div
-                      className="bg-slate-100 rounded-[170px] w-[170px] h-[170px] flex absolute z-10"
-                      style={{ top: "10%" }}
-                    />
-                  </div>
-                  <div
-                    className="flex flex-col gap-y-4 w-[180px]"
-                    data-aos="fade-left"
-                    data-aos-duration="500"
-                  >
-                    <h4 className="text-slate-700 font-semibold text-lg">
-                      {collectionItem.name}
-                    </h4>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-col justify-end items-start">
-                        <h5 className="text-slate-600 text-base font-base">
-                          {collectionItem.deskripsi}
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Learning Report Tab */}
-          <TabsContent
-            value="learningreport"
-            className="flex flex-col gap-y-8 justify-center items-start w-full"
-          >
-            <h5 className="title-lg-medium">Learning</h5>
-            <div className="flex flex-row gap-x-4 w-full">
-              {filterCollectionByType("learning").map((collectionItem) => (
-                <div
-                  key={collectionItem.name}
-                  className="flex flex-col gap-y-4 w-[180px] basis-1/6  bg-slate-50 dark:bg-slate-900 justify-center items-center px-6 py-4 rounded-xl"
-                >
-                  <div
-                    className="relative z-20 flex flex-col justify-center items-center pb-12"
-                    data-aos="fade-up-left"
-                    data-aos-duration="300"
-                  >
-                    <Image
-                      height={250}
-                      width={180}
-                      src={collectionItem.image}
-                      alt={collectionItem.name}
-                      className="relative z-20 w-[120px] origin-bottom -rotate-12 left-6"
-                    />
-                    <div
-                      className="bg-slate-100 rounded-[170px] w-[170px] h-[170px] flex absolute z-10"
-                      style={{ top: "10%" }}
-                    />
-                  </div>
-                  <div
-                    className="flex flex-col gap-y-4 w-[180px]"
-                    data-aos="fade-left"
-                    data-aos-duration="500"
-                  >
-                    <h4 className="text-slate-700 font-semibold text-lg">
-                      {collectionItem.name}
-                    </h4>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-col justify-end items-start">
-                        <h5 className="text-slate-600 text-base font-base">
-                          {collectionItem.deskripsi}
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Manual Report Tab */}
-          <TabsContent
-            value="manualreport"
-            className="flex flex-col gap-y-8 justify-center items-start w-full"
-            data-aos="fade-left"
-            data-aos-duration="500"
-          >
-            <h5 className="title-lg-medium">Manual Book</h5>
-            <div className="flex flex-row gap-x-4 w-full">
-              {filterCollectionByType("manual").map((collectionItem) => (
-                <div
-                  key={collectionItem.name}
-                  className="flex flex-col gap-y-4 w-[180px] basis-1/6 bg-slate-50 dark:bg-slate-900 justify-center items-center px-6 py-4 rounded-xl"
-                >
-                  <div
-                    className="relative z-20 flex flex-col justify-center items-center pb-12"
-                    data-aos="fade-up-left"
-                    data-aos-duration="300"
-                  >
-                    <Image
-                      height={250}
-                      width={180}
-                      src={collectionItem.image}
-                      alt={collectionItem.name}
-                      className="relative z-20 w-[120px] origin-bottom -rotate-12 left-6"
-                    />
-                    <div
-                      className="bg-slate-100 rounded-[170px] w-[170px] h-[170px] flex absolute z-10"
-                      style={{ top: "10%" }}
-                    />
-                  </div>
-                  <div
-                    className="flex flex-col gap-y-4 w-[180px]"
-                    data-aos="fade-left"
-                    data-aos-duration="500"
-                  >
-                    <h4 className="text-slate-700 font-semibold text-lg">
-                      {collectionItem.name}
-                    </h4>
-                    <div className="flex flex-row justify-between">
-                      <div className="flex flex-col justify-end items-start">
-                        <h5 className="text-slate-600 text-base font-base">
-                          {collectionItem.deskripsi}
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No reports available.</p>
+              )}
             </div>
           </TabsContent>
         </Tabs>

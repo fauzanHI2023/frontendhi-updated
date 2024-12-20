@@ -121,7 +121,7 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             placeholder="Masukkan Kata Sandi Saat Ini"
-            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-background border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="mb-4">
@@ -134,7 +134,7 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="Masukkan Kata Sandi Baru"
-            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-background border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="mb-4">
@@ -147,7 +147,7 @@ const ChangePassword = ({ setisChangePassword }: ChangePasswordProps) => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Masukkan Konfirmasi Sandi Baru"
-            className="w-full border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-background border dark:border-slate-700 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-500"
           />
         </div>
         <div className="flex flex-row justify-between items-center">

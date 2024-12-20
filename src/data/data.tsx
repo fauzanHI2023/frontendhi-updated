@@ -189,25 +189,25 @@ export const programCard = [
   {
     icon: <MdFlood />,
     label: "Initiative For Disaster",
-    text: "Initiative for Disaster merupakan kumpulan dari berbagai program yang bertujuan mengurangi dampak bencana",
+    text: "Being an initiator in building community resilience to disasters and climate change​",
     url: "/whatwedo/initiativefordisaster",
   },
   {
     icon: <FaChildren />,
     label: "Initiative For Children",
-    text: "Initiative for Disaster merupakan kumpulan dari berbagai program yang bertujuan mengurangi dampak bencana",
+    text: "Fulfillment of children's rights to improve children's quality of life​",
     url: "/whatwedo/initiativeforchildren",
   },
   {
     icon: <SiPowerpages />,
     label: "Initiative For Empowerment",
-    text: "Initiative for Disaster merupakan kumpulan dari berbagai program yang bertujuan mengurangi dampak bencana",
+    text: "Building human resources & systems for sustainable improvement of people's quality of life​",
     url: "/whatwedo/initiativeforempowerment",
   },
   {
     icon: <GiDrawbridge />,
     label: "Infrastruktur Program",
-    text: "Initiative for Disaster merupakan kumpulan dari berbagai program yang bertujuan mengurangi dampak bencana",
+    text: "Open access to improve the quality of life of the community​",
     url: "/whatwedo/infrastructureprogram",
   },
 ];
