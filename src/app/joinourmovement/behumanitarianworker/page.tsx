@@ -77,7 +77,7 @@ const BeHumanitarianWorker = () => {
                 key={vacancies.id}
                 className="flex flex-row justify-between items-center border border-sky-100 px-8 py-6 rounded transition ease-in duration-300 hover:border-b-sky-700 shadow-lg shadow-gray-100/50"
               >
-                <Link href={`/joinourmovement/behumanitarianworker/${vacancies.slug}`}>
+                <Link className="w-full flex flex-row justify-between items-center" href={`/joinourmovement/behumanitarianworker/${vacancies.slug}`}>
                   <div className="flex flex-col justify-start gap-y-2">
                     <h5 className="font-medium text-sky-700">
                       {vacancies.vacancy_name}

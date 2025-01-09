@@ -87,7 +87,7 @@ const Page = (props: Props) => {
 
   return (
     <DashboardLayout>
-      <main className="flex min-h-screen flex-col px-16 py-12">
+      <main className="flex min-h-screen flex-col px-16 py-12 pb-0">
       {isEditAkun ? (
           <EditAccount setisEditAkun={setisEditAkun} />
         ) : isEditProfil ? (

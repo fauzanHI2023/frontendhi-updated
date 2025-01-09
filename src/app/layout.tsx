@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Poppins, Raleway, Nunito } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/SessionProvider";
+import { CartProvider } from "@/context/CartContext";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = Poppins({
@@ -41,9 +42,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           <AuthProvider>
-            <Navbar/>
-            {children}
-            <Footer/>
+            <CartProvider>
+              <Navbar/>
+              {children}
+              <Footer/>
+            </CartProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

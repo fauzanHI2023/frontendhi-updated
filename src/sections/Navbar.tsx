@@ -11,32 +11,33 @@ import { FcGoogle } from "react-icons/fc";
 import { MdKeyboardArrowDown, MdMenu, MdClose } from "react-icons/md";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { Moon, Sun, BookUser } from "lucide-react"
-import { useTheme } from "next-themes"
+import { Moon, Sun, BookUser } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { LogIn } from 'lucide-react';
+import { LogIn } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCart } from "@/context/CartContext";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-    const { setTheme } = useTheme();
+  const { setTheme } = useTheme();
   const router = useRouter();
   const { data: session } = useSession();
   const callbackUrl = "/dashboard";
   const user: any = session?.user;
   const pathname = usePathname();
-  const [ showPwlogin, setShowPwLogin ] = useState(false);
+  const [showPwlogin, setShowPwLogin] = useState(false);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [formFilled, setFormFilled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const { cartItems, cartCount } = useCart();
   const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -134,29 +135,23 @@ const Navbar = (props: Props) => {
   const isPageLogin = pathname === "/login";
 
   const isPageRegister = pathname === "/register";
-  
+
   const isPageDonate = pathname === "/takeaction/selfdonate";
 
   const isPageCollaboration = pathname === "/takeaction/collaborationimpact";
 
-  const isPageDetailsCareer =  /^\/joinourmovement\/behumanitarianworker\/[^/]+$/.test(pathname || "");
-
-  useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCartItems(cartItems);
-  }, []);
+  const isPageDetailsCareer =
+    /^\/joinourmovement\/behumanitarianworker\/[^/]+$/.test(pathname || "");
 
   return (
     <>
       {" "}
       <header
-        className={`text-slate-700 dark:text-white ${isHome ? "" : ""} bg-background ${
-          isPageLogin ? "hidden" : "flex"
-        } ${
+        className={`text-slate-700 dark:text-white ${
+          isHome ? "" : ""
+        } bg-background ${isPageLogin ? "hidden" : "flex"} ${
           isPageRegister ? "hidden" : "flex"
-        } ${
-          isPageDonate ? "sm:bg-transparent" : ""
-        } ${
+        } ${isPageDonate ? "sm:bg-transparent" : ""} ${
           isPageDetailsCareer ? "sm:bg-transparent text-white" : ""
         } ${
           isScrolled
@@ -172,90 +167,95 @@ const Navbar = (props: Props) => {
             } w-32 h-12 bg-no-repeat bg-contain flex title-font font-medium items-center text-gray-900 mb-0`}
           ></Link>
           <button
-              className="text-xl focus:outline-none md:hidden"
-              onClick={() => setShowMenu(!showMenu)}
-            >
-              {showMenu ? <MdClose /> : <MdMenu />}
-            </button>
-            <ul
-              className={`sm:flex hidden flex-col sm:flex-row sm:space-x-6 mt-4 md:mt-0 sm:relative fixed sm:top-0 top-16 right-0 sm:w-auto w-full`}
-            >
-              {menuItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="relative group text-base font-normal"
+            className="text-xl focus:outline-none md:hidden"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            {showMenu ? <MdClose /> : <MdMenu />}
+          </button>
+          <ul
+            className={`sm:flex hidden flex-col sm:flex-row sm:space-x-6 mt-4 md:mt-0 sm:relative fixed sm:top-0 top-16 right-0 sm:w-auto w-full`}
+          >
+            {menuItems.map((item) => (
+              <li
+                key={item.id}
+                className="relative group text-base font-normal"
+              >
+                <Link
+                  href={item.url}
+                  className={`flex flex-row items-center ${isHome ? "" : ""}`}
                 >
-                  <Link
-                    href={item.url}
-                    className={`flex flex-row items-center ${
-                      isHome ? "" : ""
-                    }`}
-                  >
-                    {item.label} <MdKeyboardArrowDown className="ml-1" />
-                  </Link>
-                  {item.subMenu && <SubMenu items={item.subMenu} />}
-                </li>
-              ))}
-            </ul>
-            <ul
-              className={`${
-                showMenu ? "md:flex" : "hidden"
-              } flex-col mt-4 fixed top-16 right-0 w-full bg-background py-5 px-4`}
-            >
-              {menuItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="relative group text-base font-normal pb-2"
-                >
-                  <Link href={item.url}>
-                    {item.label}
-                  </Link>
-                  {item.subMenu && <SubMenu items={item.subMenu} />}
-                </li>
-              ))}
-            </ul>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Sun className="h-[1.2rem] text-slate-700 dark:text-white w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                  Light
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                  Dark
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                  System
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <div
+                  {item.label} <MdKeyboardArrowDown className="ml-1" />
+                </Link>
+                {item.subMenu && <SubMenu items={item.subMenu} />}
+              </li>
+            ))}
+          </ul>
+          <ul
+            className={`${
+              showMenu ? "md:flex" : "hidden"
+            } flex-col mt-4 fixed top-16 right-0 w-full bg-background py-5 px-4`}
+          >
+            {menuItems.map((item) => (
+              <li
+                key={item.id}
+                className="relative group text-base font-normal pb-2"
+              >
+                <Link href={item.url}>{item.label}</Link>
+                {item.subMenu && <SubMenu items={item.subMenu} />}
+              </li>
+            ))}
+          </ul>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Sun className="h-[1.2rem] text-slate-700 dark:text-white w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div
             className="relative"
             onMouseEnter={() => setShowCartDropdown(true)}
             onMouseLeave={() => setShowCartDropdown(false)}
           >
             <AiOutlineShoppingCart className="text-2xl cursor-pointer" />
+            {cartCount > 0 && (
+              <span className="absolute top-[-8px] right-[-8px] bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
             {showCartDropdown && (
               <div className="absolute right-[-14rem] w-[464px] bg-background border rounded shadow-lg z-20">
-                <h3 className="text-lg font-semibold p-4 border-b">Keranjang</h3>
+                <h3 className="text-lg font-semibold p-4 border-b">
+                  Keranjang
+                </h3>
                 <ul className="p-4 flex flex-col gap-y-5">
                   {cartItems.length > 0 ? (
                     cartItems.map((item) => (
-                      <li key={item.product_id} className="flex flex-row w-full mb-2 flex justify-between">
-                        <div className="flex">
-                          <img src={item.product_img} alt={item.name} className="w-[56px] h-[56px]"/>
-                        </div>
-                        <span className="truncate w-[250px] text-sm">{item.name}</span>
-                        <span>Rp{item.price}</span>
+                      <li
+                        key={item.campaign_id}
+                        className="flex flex-row w-full mb-2 flex justify-between"
+                      >
+                        <div className="flex"></div>
+                        <span>Rp{item.amount}</span>
                       </li>
                     ))
                   ) : (
-                    <li className="text-center text-gray-500">Keranjang kosong.</li>
+                    <li className="text-center text-gray-500">
+                      Keranjang kosong.
+                    </li>
                   )}
                 </ul>
                 {cartItems.length > 0 && (
@@ -288,14 +288,14 @@ const Navbar = (props: Props) => {
                     onClick={() => setShowModal(true)}
                     className="h-full font-semibold inline-flex items-center bg-sky-600 border-0 py-2 px-4 focus:outline-none rounded-xl text-sm text-white mt-0 sm:mt-0 mr-2"
                   >
-                    Log In <LogIn className="pl-2 w-8"/>
+                    Log In <LogIn className="pl-2 w-8" />
                   </button>
                   <p>|</p>
                   <Link
                     href="/register"
                     className="h-full inline-flex items-center  border-0 py-2 px-2 focus:outline-none rounded text-sm text-slate-600 dark:text-white mt-0 sm:mt-0"
                   >
-                    <BookUser/>
+                    <BookUser />
                   </Link>
                 </div>
               )}
@@ -340,7 +340,7 @@ const Navbar = (props: Props) => {
                         id="password"
                         className="w-full bg-background text-slate-800 dark:text-slate-200 border border-solid border-[#919EAB52] px-2 pb-2 pt-4 rounded-lg  placeholder:text-[#919EAB] focus:border-sky-600 focus:outline-none transition duration-300 ease-in-out"
                         placeholder="Password"
-                        type={showPwlogin ? 'text' : 'password'}
+                        type={showPwlogin ? "text" : "password"}
                         value={formData.password}
                         onChange={handleChange}
                       />
@@ -373,7 +373,7 @@ const Navbar = (props: Props) => {
                     </button>
                     <div className="flex flex-row text-center my-4">
                       <p className="text-stone-400 text-base">
-                        Don&apos;t have an account yet? {" "}
+                        Don&apos;t have an account yet?{" "}
                       </p>
                       <Link
                         href="/register"

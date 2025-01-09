@@ -34,10 +34,10 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className={`h-full dark:bg-slate-900 bg-white border h-96 w-1/5 py-4 drop-shadow-xl rounded-xl mt-12`}>
+    <aside className={`h-full sticky top-32 dark:bg-slate-900 border bg-white h-96 w-1/5 py-4 rounded-3xl mt-12`}>
       <ul className="h-full text-sm">
         {menuDashboard.map((menuItem, index) => (
-          <li key={index} className={`py-3 px-8 ${isMenuItemActive(menuItem.url) ? 'text-slate-950 dark:text-white font-bold' : 'text-zinc-500 dark:text-slate-400 font-semibold'}`}>
+          <li key={index} className={`py-3 px-8 ${isMenuItemActive(menuItem.url) ? 'text-gray-950 dark:text-white font-bold' : 'text-gray-500 dark:text-slate-400 font-normal hover:bg-gray-100 hover:text-gray-500 transition ease-in duration-300'}`}>
             {menuItem.subMenu ? (
               <div 
                 onClick={() => toggleSubMenu(menuItem.url)}

@@ -1,155 +1,118 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { inputCart } from "@/lib/donation/transaction/auth-cart";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { productDonate } from "@/lib/auth-payment";
 import PopupNotif from "../utility/PopupNotif";
-import { motion } from "framer-motion";
-
-interface User {
-  id: number;
-  full_name: string;
-  email: string;
-}
+import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 const BannerHome: React.FC = () => {
-  const { data: session, status } = useSession();
-  const router: any = useRouter();
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null
-  );
-  const [userId, setUserId] = useState<number>(1); // Assuming user_id is 1 for now
-  const [fullName, setFullName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState<string>(""); 
+  const [rawAmount, setRawAmount] = useState<number | null>(null);
+  const { cartItems, setCartItems } = useCart();
+  const [cookies, setCookies] = useState<string | null>(null); 
+  const router = useRouter();
+
+  const nominalOptions = [
+    { label: "Rp 50.000", value: 50000.0 },
+    { label: "Rp 100.000", value: 100000.0 },
+    { label: "Rp 250.000", value: 250000.0 },
+    { label: "Rp 500.000", value: 500000.0 },
+    { label: "Rp 1.000.000", value: 1000000.0 },
+    { label: "Rp 2.000.000", value: 2000000.0 },
+  ];
+
   const [notifMessage, setNotifMessage] = useState("");
 
   useEffect(() => {
     AOS.init();
 
-    if (status === "authenticated" && session) {
-      const user = session.user as User;
-      setUserId(user.id ?? 1);
-      setFullName(user.full_name ?? "");
-      setEmail(user.email ?? "");
-    }
+    const getCookies = () => {
+      const allCookies = document.cookie;
+      setCookies(allCookies || "Tidak ada cookies ditemukan");
+    };
 
-    const fetchProducts = async () => {
-      try {
-        const response = await productDonate();
-        if (response.status === "success") {
-          setProducts(response.data); // Mengakses properti data dari response
-        } else {
-          console.error("Error fetching products: status not successful");
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
+    const checkAndCreateCookie = () => {
+      const cookieExists = document.cookie.split(";").some((cookie) => cookie.trim().startsWith("osscart="));
+
+      if (!cookieExists) {
+        const expirationDate = new Date();
+        expirationDate.setFullYear(expirationDate.getFullYear() + 2);
+        document.cookie = `osscart=true; expires=${expirationDate.toUTCString()}; path=/`;
+        setCookies("osscart cookie has been created.");
+      } else {
+        setCookies("osscart cookie already exists.");
       }
     };
 
-    fetchProducts();
-  }, [status, session, router]);
-
-  useEffect(() => {
-    const loadSnapScript = () => {
-      const script = document.createElement("script");
-      script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
-      script.setAttribute("data-client-key", "SB-Mid-client-UF_dlhjGXoaigX0y");
-      script.async = true;
-      script.onload = () => {
-        console.log("Snap script loaded successfully.");
-      };
-      script.onerror = () => {
-        console.error("Failed to load Snap script.");
-      };
-      document.body.appendChild(script);
-    };
-
-    loadSnapScript();
+    checkAndCreateCookie();
+    getCookies();
   }, []);
 
-  const handleDonateNow = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (selectedProductId === null) {
-      setNotifMessage("Pilih produk terlebih dahulu.");
-      return;
-    }
+  const handleAmountClick = (value: number) => {
+    setSelectedAmount(value);
+    setCustomAmount(formatCurrency(value.toString()));
+    setRawAmount(value);
+  };
 
-    if (status !== "authenticated") {
-      setNotifMessage("Silahkan Login terlebih dahulu untuk berdonasi.");
-      router.push("/login");
-      return;
-    }
+  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^\d]/g, "");
+    const formattedValue = formatCurrency(value);
 
-    try {
-      const response = await fetch(
-        "https://adminx.human-initiative.org/transaction/create-transaction",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            full_name: fullName,
-            email: email,
-            items: [
-              {
-                product_id: selectedProductId,
-                quantity: 1, // Assuming quantity is 1 for now
-              },
-            ],
-          }),
-        }
-      );
+    setCustomAmount(formattedValue);
+    setRawAmount(parseInt(value) || null);
 
-      const data = await response.json();
-      console.log("Backend Response:", data); // Log response
+    const match = nominalOptions.find(
+      (option) => option.value === parseInt(value)
+    );
+    setSelectedAmount(match ? match.value : null);
+  };
 
-      if (data.status === "success") {
-        console.log("Order ID:", data.transaction_id); // Log order ID
-        console.log("Snap Token:", data.snap_token); // Log snap token
+  const formatCurrency = (value: string) => {
+    const parsedValue = parseInt(value || "0");
+    return `Rp ${parsedValue.toLocaleString("id-ID")}`;
+  };
 
-        if (window.snap) {
-          window.snap.pay(data.snap_token, {
-            onSuccess: function (result: any) {
-              console.log("Transaction successful", result);
-              router.push(
-                `/notification?order_id=${result.order_id}&status_code=${result.status_code}&transaction_status=${result.transaction_status}`
-              );
-            },
-            onPending: function (result: any) {
-              console.log("Transaction pending", result);
-            },
-            onError: function (result: any) {
-              console.log("Transaction failed", result);
-            },
-            onClose: function () {
-              console.log("Transaction popup closed");
-            },
+  const handleDonasiClick = () => {
+    // Ensure rawAmount is valid
+    if (rawAmount) {
+      const cookiesId = document.cookie.split(";").find(cookie => cookie.trim().startsWith("osscart="))?.split("=")[1];
+  
+      if (cookiesId) {
+        // Menyimpan data ke localStorage
+        const cartData = {
+          cookies_id: cookiesId,
+          campaign_id: 2, // Ganti sesuai dengan campaign_id yang dibutuhkan
+          quantity: 1, // Quantity is fixed to 1 for each donation
+          amount: rawAmount, // Set the amount correctly
+        };
+  
+        // Retrieve existing data from localStorage or initialize an empty array
+        const storedData = JSON.parse(localStorage.getItem("osscart") || "[]");
+        const updatedCart = [...storedData, cartData];
+
+        localStorage.setItem("osscart", JSON.stringify(updatedCart));
+        setCartItems(updatedCart); // Update context
+  
+        // Memanggil inputCart API
+        inputCart(cartData.cookies_id, cartData.campaign_id, cartData.quantity, cartData.amount)
+          .then((response) => {
+            setNotifMessage("Donasi berhasil!");
+            router.push(`/checkout`);
+          })
+          .catch((error) => {
+            setNotifMessage("Terjadi kesalahan saat melakukan donasi.");
           });
-        } else {
-          console.error("Snap is not defined");
-        }
       } else {
-        console.error("Error creating transaction:", data.message);
+        setNotifMessage("Cookie 'osscart' tidak ditemukan.");
       }
-    } catch (error) {
-      console.error("Error creating transaction:", error);
     }
   };
-
-  const formatPrice = (price: number) => {
-    return `Rp ${Number(price)
-      .toFixed(0)
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
-  };
+  
 
   return (
     <section className="flex flex-row w-full h-screen sm:p-24 p-6 sm:pt-24 pt-24 dark:bg-hero-pattern bg-hero-white sm:bg-cover bg-cover bg-center bg-no-repeat">
@@ -164,7 +127,8 @@ const BannerHome: React.FC = () => {
           </h3>
           <h6 className="font-normal text-sm font-base">
             Lets work together to help our brothers and sisters who are being
-            hit by a disaster. One upee from you is definitely valuable to them.
+            hit by a disaster. One rupee from you is definitely valuable to
+            them.
           </h6>
         </div>
         <div
@@ -173,11 +137,8 @@ const BannerHome: React.FC = () => {
         >
           <TabGroup className="w-2/3">
             <TabList className="w-full mb-4">
-              <Tab className="transition duration-150 ease-in w-2/4 rounded-tl-[23px] rounded-bl-[23px] py-3 text-center dark:bg-white bg-white dark:data-[selected]:bg-sky-950 data-[selected]:bg-sky-600 dark:text-blue-900 text-sky-600 dark:data-[selected]:text-white data-[selected]:text-white">
+              <Tab className="transition duration-150 ease-in w-full rounded-[23px] py-3 text-center dark:bg-white bg-white dark:data-[selected]:bg-sky-950 data-[selected]:bg-sky-600 dark:text-blue-900 text-sky-600 dark:data-[selected]:text-white data-[selected]:text-white">
                 One Time Donation
-              </Tab>
-              <Tab className="transition duration-150 ease-in w-2/4 rounded-tr-[23px] rounded-br-[23px] py-3 text-center dark:bg-white bg-white dark:data-[selected]:bg-sky-950 data-[selected]:bg-sky-600 dark:text-blue-900 text-sky-600 dark:data-[selected]:text-white data-[selected]:text-white">
-                Monthly Donation
               </Tab>
             </TabList>
             <TabPanels>
@@ -189,77 +150,49 @@ const BannerHome: React.FC = () => {
                 <div className="dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-4 text-center rounded-tl-[23px] rounded-tr-[23px]">
                   <h4>Choose Your Donation Amount</h4>
                 </div>
-                <form className="flex flex-wrap dark:bg-white bg-white p-4">
-                  List Produk disini
+                <form className="p-4 bg-white dark:bg-slate-200">
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    {nominalOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => handleAmountClick(option.value)}
+                        className={`p-3 text-center rounded-3xl transition ${
+                          selectedAmount === option.value
+                            ? "bg-sky-600 text-white"
+                            : "bg-gray-300 text-gray-600"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={customAmount}
+                    onChange={handleCustomAmountChange}
+                    placeholder="Enter Amount"
+                    className="w-full p-3 border border-gray-300 rounded-lg dark:text-slate-600"
+                  />
                   <button
-                    type="submit"
-                    className="dark:text-white text-white w-full dark:bg-sky-950 bg-sky-600 rounded-[50px] py-3 px-4 text-center"
+                    type="button"
+                    onClick={handleDonasiClick}
+                    className="w-full mt-4 py-3 text-white bg-sky-600 rounded-full"
                   >
-                    Donasi Sekarang
+                    Donate Now
                   </button>
+                  {/* <div className="mt-4">
+                    <h4>Cookies: {cookies || "Fetching..."}</h4>
+                  </div> */}
                 </form>
                 <div className="flex flex-col dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-8 text-center rounded-bl-[23px] rounded-br-[23px]">
                   <h4>
                     The donations you make are used to run the programs that
                     have been prepared by the Human Initiative. If you want to
-                    donate to a specific program please click {" "}
-                    <a href="" className="font-extrabold">here​</a>
-                  </h4>
-                </div>
-              </TabPanel>
-              <TabPanel
-                className="flex flex-col text-sm transition duration-150 ease-in"
-                data-aos="fade-left"
-                data-aos-duration="500"
-              >
-                <div className="dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-4 text-center rounded-tl-[23px] rounded-tr-[23px]">
-                  <h4>Choose your Monthly Donation Amount​</h4>
-                </div>
-                <form
-                  className="flex flex-col gap-x-3 dark:bg-white bg-white p-4"
-                  onSubmit={handleDonateNow}
-                >
-                  <div className="grid grid-cols-3 gap-4">
-                    {loading ? (
-                      <p>Loading products...</p>
-                    ) : products.length > 0 ? (
-                      products.map((product) => (
-                        <div key={product.product_id} className="w-full mb-4">
-                          <input
-                            type="radio"
-                            name="product"
-                            id={product.product_id}
-                            value={product.product_id}
-                            onChange={() =>
-                              setSelectedProductId(product.product_id)
-                            }
-                            className="peer hidden"
-                          />
-                          <label
-                            htmlFor={product.product_id}
-                            className="flex flex-col items-center w-full cursor-pointer p-2 text-center rounded-3xl bg-slate-300 text-slate-600 peer-checked:bg-sky-600 peer-checked:text-white"
-                          >
-                            {formatPrice(product.price)}
-                          </label>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No products available</p>
-                    )}
-                  </div>
-                  <button
-                    type="submit"
-                    className="dark:text-white text-white w-full dark:bg-sky-950 bg-sky-600 rounded-[50px] py-3 px-4 text-center"
-                  >
-                    Donasi Sekarang
-                  </button>
-                </form>
-                <div className="flex flex-col dark:bg-sky-950 bg-sky-600 dark:text-white text-white p-8 text-center rounded-bl-[23px] rounded-br-[23px]">
-                  <h4>
-                  The donations you make are used to run the programs that
-                    have been prepared by the Human Initiative. If you want to
-                    donate to a specific program please click {" "}
-                    <a href="" className="font-extrabold">here​</a>
+                    donate to a specific program please click{" "}
+                    <a href="" className="font-extrabold">
+                      here​.
+                    </a>
                   </h4>
                 </div>
               </TabPanel>

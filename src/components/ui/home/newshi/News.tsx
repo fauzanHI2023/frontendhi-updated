@@ -19,6 +19,7 @@ interface News {
   post_content: string;
   post_date_gmt: string;
   category_posts: string;
+  slug: string;
 }
 
 const News = () => {
@@ -41,19 +42,20 @@ const News = () => {
 
   const filterNews = () => {
     if (!newss) return [];
-
+  
     // Urutkan berdasarkan ID terbesar
     const sortedNews = [...newss].sort((a, b) => b.id - a.id);
-
-    // Ambil 4 data teratas
-    let filtered = sortedNews.slice(0, 4);
-
-    if (selectedTab !== "all") {
-      filtered = filtered.filter((news) => news.category_posts === selectedTab);
+  
+    if (selectedTab === "all") {
+      // Tampilkan 4 berita untuk kategori "all"
+      return sortedNews.slice(0, 4);
     }
-
-    return filtered;
-  };
+  
+    // Filter berita berdasarkan kategori yang dipilih dan ambil 4 teratas
+    return sortedNews
+      .filter((news) => news.category_posts === selectedTab)
+      .slice(0, 4);
+  };  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -146,21 +148,25 @@ const News = () => {
                   className="publikasi-card mb-4 border-b pb-4 w-full flex flex-col transition duration-500 ease-in"
                 >
                   <span className="w-full h-[300px] overflow-hidden relative">
-                    <Image
-                      src={news.guid}
-                      alt={news.post_title}
-                      width={500}
-                      height={300}
-                      className="w-full h-full rounded-xl object-cover float-none absolute"
-                    />
+                    <Link href={`/publication/news&stories/${news.slug}`}>
+                      <Image
+                        src={news.guid}
+                        alt={news.post_title}
+                        width={500}
+                        height={300}
+                        className="w-full h-full rounded-xl object-cover float-none absolute"
+                      />
+                    </Link>
                   </span>
                   <div className="flex flex-col gap-y-4 justify-start items-start px-0 py-4">
                     <span className="dark:bg-slate-800 dark:text-slate-300 text-slate-600 bg-slate-200 py-1 px-2 rounded-2xl w-max">
                       {formatDate(news.post_date_gmt)}
                     </span>
-                    <h2 className="text-sky-800 dark:text-white sm:text-base text-base font-semibold dark:text-white leading-6 h-[50px] overflow-hidden">
-                      {news.post_title}
-                    </h2>
+                    <Link href={`/publication/news&stories/${news.slug}`}>
+                      <h2 className="text-sky-800 dark:text-white sm:text-base text-base font-semibold dark:text-white leading-6 h-[50px] overflow-hidden">
+                        {news.post_title}
+                      </h2>
+                    </Link>
                     <p className="text-slate-500 text-sm font-normal dark:text-slate-200">
                       {truncateAndStripHtml(news.post_content, 5)}
                     </p>

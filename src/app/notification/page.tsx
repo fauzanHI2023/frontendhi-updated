@@ -14,7 +14,7 @@ const NotificationPage: React.FC = () => {
         if (orderId) {
             const fetchTransactionDetails = async () => {
                 try {
-                    const response = await fetch(`https://adminx.human-initiative.org/transaction/get-transaction-details?order_id=${orderId}`);
+                    const response = await fetch(`https://adminx.human-initiative.org/donation/create-transaction-api/get-transaction-details?order_id=${orderId}`);
                     const data = await response.json();
                     if (data.status === 'success') {
                         setTransactionDetails(data.data);
@@ -85,9 +85,9 @@ const NotificationPage: React.FC = () => {
                                 <div key={index} className="flex flex-col gap-y-4">
                                     <div className="flex flex-row justify-between">
                                         <span className="mr-2 w-60 font-base dark:text-white text-zinc-800">
-                                            {item.product_name}
+                                            {item.campaign_name}
                                         </span>
-                                        <span>{item.price}</span>
+                                        <span>{item.amount}</span>
                                     </div>
                                 </div>
                             ))}

@@ -9,6 +9,7 @@ import React, {
 import { MoveRight } from "lucide-react";
 import { publicDonate, joinProject } from "@/data/data";
 import { Progress } from "@/components/ui/progress_fe";
+import { fetchCampaign } from "@/lib/donation/campaign/auth-campaign";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
@@ -29,12 +30,25 @@ const ITEMS_PER_PAGE = 8;
 const Donate = () => {
   const { scrollYProgress } = useScroll();
   const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set a timeout of 4 seconds to simulate loading
-    const timer = setTimeout(() => setLoading(false), 4000);
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
-  }, []);
+      const getProjects = async () => {
+        try {
+          setIsLoading(true);
+          const campaigns = await fetchCampaign();
+          setProjects(campaigns.data || []); // Pastikan campaigns adalah array
+        } catch (err) {
+          setError("Failed to load campaigns");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      getProjects();
+    }, []);
   // Function to filter collection items by type
   const filterCollectionByType = (tipe: string) => {
     return joinProject.filter((item) => item.tipe === tipe);
@@ -69,6 +83,36 @@ const Donate = () => {
     const max = 14000000;
     return ((grossAmount - min) / (max - min)) * 100;
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-24 text-center">
+        <p>Loading campaigns...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-24 text-center text-red-500">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="p-24 text-center">
+        <p>No campaigns found.</p>
+      </div>
+    );
+  }
+
+  const formatCurrency = (value: string) => {
+    const parsedValue = parseInt(value || "0");
+    return `Rp ${parsedValue.toLocaleString("id-ID")}`;
+  };
+
   return (
     <main className="">
       <motion.path
@@ -262,92 +306,58 @@ const Donate = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="all">
-              <div className="flex flex-row gap-x-8 w-full">
-                {loading ? (
-                  <>
-                    {/* Skeleton Loader */}
-                    {[...Array(4)].map((_, index) => (
-                      <div key={index} className="w-1/4 flex flex-col">
-                        <div className="flex flex-col gap-y-4 h-[200px] py-4 px-6">
-                          <Skeleton className="h-full w-full rounded-2xl" />
-                        </div>
-                        <div className="flex flex-col py-4 px-6 dark:bg-slate-900 bg-white">
-                          <Skeleton className="h-6 w-1/2 mb-4" />
-                          <Skeleton className="h-4 w-3/4 mb-2" />
-                          <Skeleton className="h-4 w-full" />
-                          <div className="flex flex-row gap-x-8 mt-4">
-                            <Skeleton className="h-8 w-1/3" />
-                            <Skeleton className="h-8 w-1/3" />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  joinProject.map((projectItem) => (
-                    <div
-                      key={projectItem.nama}
-                      className="h-full flex flex-col justify-between rounded-2xl w-1/4"
-                    >
+              <div className="grid grid-cols-4 gap-8 w-full">
+                {projects.map((projectItem: any) => (
+                  <div
+                    key={projectItem.id}
+                    className="h-full flex flex-col justify-between rounded-2xl mb-6"
+                  >
+                    <Link href={`/campaign/${projectItem.slug}`}>
                       <div
-                        className="flex flex-col gap-y-4 h-[200px] py-4 px-6"
+                        className="publikasi-card flex flex-col gap-y-4 h-[200px] py-4 px-6"
                         style={{
-                          backgroundImage: `url(${projectItem.image})`,
+                          backgroundImage: `url(${projectItem.image || "/donate1.jpeg"})`,
                           backgroundSize: "cover",
                         }}
-                        data-aos="fade-up-left"
-                        data-aos-duration="500"
                       ></div>
-                      <div className="flex flex-col py-4 px-6 dark:bg-slate-900 bg-white">
-                        <div
-                          className="flex flex-col gap-y-4"
-                          data-aos="fade-up-left"
-                          data-aos-duration="800"
-                        >
-                          <span className="flex text-sky-500 dark:text-slate-200 dark:text-sky-500 dark:bg-slate-700 bg-sky-100 py-1 px-4 rounded-2xl w-max">
-                            {projectItem.tipe}
-                          </span>
+                    </Link>
+                    <div className="flex flex-col py-4 px-6 dark:bg-slate-900 bg-white">
+                      <div className="flex flex-col gap-y-4">
+                        <span className="flex text-sky-500 dark:text-slate-200 dark:text-sky-500 dark:bg-slate-700 bg-sky-100 py-1 px-4 rounded-2xl w-max">
+                          children
+                        </span>
+                        <Link href={`/campaign/${projectItem.slug}`}>
                           <h6 className="text-lg font-semibold text-slate-700 dark:text-white h-[60px] overflow-hidden">
-                            {projectItem.nama}
+                            {projectItem.campaign_name}
                           </h6>
-                          <h6 className="text-sm font-medium text-slate-600 dark:text-white h-[40px] overflow-hidden">
-                            {projectItem.deskrispi}
+                        </Link>
+                        <h6 className="text-sm font-medium text-slate-600 dark:text-white h-[40px] overflow-hidden">
+                          {projectItem.campaign_description}
+                        </h6>
+                        <Progress value={calculateProgress(projectItem.donation_collected || 0)} />
+                      </div>
+                      <p className="text-sky-700 dark:text-white text-center flex flex-row gap-x-2 py-4">
+                        <span>
+                          <Heart className="text-red-500" />
+                        </span>
+                        {projectItem.support} orang memberi dukungan
+                      </p>
+                      <div className="flex flex-row gap-x-8">
+                        <div className="w-2/3 flex flex-col justify-between items-start">
+                          <h6 className="text-sky-500 dark:text-sky-500 text-lg font-medium">
+                          {formatCurrency(projectItem.donation_collected)}
                           </h6>
-                          <Progress
-                            value={calculateProgress(projectItem.donasi)}
-                          />
+                          <h6 className="text-slate-500 dark:text-slate-200 text-sm">
+                          {formatCurrency(projectItem.target_donation)}
+                          </h6>
                         </div>
-                        <p
-                          className="text-sky-700 dark:text-white text-center flex flex-row gap-x-2 py-4"
-                          data-aos="fade-up-left"
-                          data-aos-duration="800"
-                        >
-                          <span>
-                            <Heart className="text-red-500" />
-                          </span>{" "}
-                          {projectItem.dukungan} orang memberi dukungan
-                        </p>
-                        <div
-                          className="flex flex-row gap-x-8"
-                          data-aos="fade-up-left"
-                          data-aos-duration="1000"
-                        >
-                          <div className="w-2/3 flex flex-col justify-between items-start">
-                            <h6 className="text-sky-500 dark:text-sky-500 text-lg font-medium">
-                              Rp {projectItem.donasi}
-                            </h6>
-                            <h6 className="text-slate-500 dark:text-slate-200 text-sm">
-                              Rp {projectItem.goals} target
-                            </h6>
-                          </div>
-                          <button className="w-1/3 bg-sky-700 text-white dark:text-white py-3 px-4 rounded-xl">
-                            Donate
-                          </button>
-                        </div>
+                        <button className="w-1/3 bg-sky-700 text-white dark:text-white py-3 px-4 rounded-xl">
+                          Donate
+                        </button>
                       </div>
                     </div>
-                  ))
-                )}
+                  </div>
+                ))}
               </div>
             </TabsContent>
             {/* Annual Report Tab */}
